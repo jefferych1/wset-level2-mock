@@ -147,6 +147,7 @@ footer{text-align:center}
   </section>
 
   <section class="card stack" id="quiz" hidden>
+    <p class="hint" id="reuse" hidden></p>
     <div class="progress"><span id="bar" style="width:0%"></span></div>
     <div class="eyebrow" id="qlo"></div>
     <p class="qtext" id="qtext"></p>
@@ -169,7 +170,14 @@ footer{text-align:center}
         </div>
       </div>
       <div class="lo-bars" id="lobars"></div>
-      <div class="row"><button class="primary" id="again">Take another paper</button></div>
+      <div class="stack" style="gap:8px">
+        <div class="row">
+          <button class="primary" id="fresh">Fresh paper: unseen questions</button>
+          <button class="ghost" id="again">New random paper</button>
+          <button class="ghost" id="change">Change paper type</button>
+        </div>
+        <p class="hint" id="seeninfo"></p>
+      </div>
     </div>
     <div class="card stack">
       <h2 id="revh">Questions to review</h2>
@@ -605,10 +613,22 @@ $("banksize").textContent=BANK.length;
 $("wtable").innerHTML=Object.keys(FULL).map(lo=>`<tr><td>${LO_NAMES[lo]}</td><td>${FULL[lo]}</td></tr>`).join("");
 
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function buildPaper(){
+const SEEN_KEY="wsetL2seen";
+let seen=new Set(),reused=0;
+try{seen=new Set(JSON.parse(sessionStorage.getItem(SEEN_KEY)||"[]"));}catch(e){}
+function saveSeen(){try{sessionStorage.setItem(SEEN_KEY,JSON.stringify([...seen]));}catch(e){}}
+function pickFor(pool,n,fresh){
+  if(!fresh)return shuffle(pool).slice(0,n);
+  const unseen=shuffle(pool.filter(b=>!seen.has(b.q))),old=shuffle(pool.filter(b=>seen.has(b.q)));
+  const out=unseen.slice(0,n);
+  if(out.length<n){reused+=n-out.length;out.push(...old.slice(0,n-out.length));}
+  return out;
+}
+function buildPaper(fresh){
+  reused=0;
   const plan=mode==="full"?FULL:{[mode]:PRACTICE[mode]};
   let out=[];
-  for(const lo of Object.keys(plan)) out=out.concat(shuffle(BANK.filter(b=>String(b.lo)===String(lo))).slice(0,plan[lo]));
+  for(const lo of Object.keys(plan)) out=out.concat(pickFor(BANK.filter(b=>String(b.lo)===String(lo)),plan[lo],fresh));
   return shuffle(out).map(b=>{
     const idx=b.keep?b.opts.map((_,i)=>i):shuffle(b.opts.map((_,i)=>i));
     return {...b,opts:idx.map(i=>b.opts[i]),ans:idx.indexOf(b.ans)};
@@ -616,9 +636,12 @@ function buildPaper(){
 }
 function fmt(s){const m=Math.floor(s/60),r=s%60;return String(m).padStart(2,"0")+":"+String(r).padStart(2,"0");}
 
-function start(){
-  mode=$("mode").value;
-  paper=buildPaper();answers=new Array(paper.length).fill(null);cur=0;timedOut=false;
+function start(fresh,keepMode){
+  if(!keepMode)mode=$("mode").value;
+  paper=buildPaper(fresh===true);
+  $("reuse").hidden=!reused;
+  $("reuse").textContent=reused?"Some sections had run out of unseen questions, so "+reused+(reused===1?" question you've seen before is":" questions you've seen before are")+" included.":"";
+  answers=new Array(paper.length).fill(null);cur=0;timedOut=false;
   remaining=Math.round(paper.length*72); // 60 min for 50 questions
   $("start").hidden=true;$("results").hidden=true;$("quiz").hidden=false;$("meta").hidden=false;
   $("mn").textContent=paper.length;
@@ -686,11 +709,19 @@ function finish(){
     li.append(eb,q,you,ok,why);rv.appendChild(li);
   });
   if(mode==="full"){try{const best=Math.max(right,Number(localStorage.getItem("wsetL2best")||0));localStorage.setItem("wsetL2best",best);}catch(e){}}
+  paper.forEach(p=>seen.add(p.q));saveSeen();updateSeenInfo();
   showBest();window.scrollTo({top:0});
 }
+function updateSeenInfo(){
+  const left=BANK.filter(b=>!seen.has(b.q)).length;
+  $("seeninfo").textContent=left>0
+    ? "You have answered "+seen.size+" of "+BANK.length+" questions this session. A fresh paper uses only the "+left+" you haven't seen yet."
+    : "You have now seen every question in the bank this session, so fresh papers will start repeating questions.";
+}
 function showBest(){try{const b=localStorage.getItem("wsetL2best");$("best").textContent=b?"Your best full-paper score so far: "+b+"/50":"";}catch(e){}}
-$("go").onclick=start;
-$("again").onclick=()=>{$("results").hidden=true;$("start").hidden=false;showBest();window.scrollTo({top:0});};
+$("go").onclick=()=>start(false,false);
+$("again").onclick=()=>start(false,true);$("fresh").onclick=()=>start(true,true);
+$("change").onclick=()=>{$("results").hidden=true;$("start").hidden=false;showBest();window.scrollTo({top:0});};
 $("next").onclick=next;$("prev").onclick=prev;
 document.addEventListener("keydown",e=>{
   if($("quiz").hidden)return;
