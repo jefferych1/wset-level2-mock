@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Free unofficial 50-question practice exam for the WSET Level 2 Award in Wines: 370-question bank, timer, grading and answer review.">
+<title>Unofficial WSET Level 2 Mock</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one centred exam card, one question at a time; results show grade band and per-outcome bars */
+:root{
+  --bg:#eef1ee; --surface:#ffffff; --ink:#18231e; --muted:#5c6b64; --line:#d8e0db;
+  --acc:#2c5b47; --acc-ink:#ffffff; --acc-soft:#dfece5;
+  --good:#23704a; --good-soft:#e2f2e8; --bad:#b0302a; --bad-soft:#f9e3e1; --gold:#8a6414; --gold-soft:#f6ecd4;
+  --f-display:"Spectral",Georgia,"Times New Roman",serif;
+  --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111714; --surface:#19211d; --ink:#e8efeb; --muted:#9fb0a8; --line:#2d3a34;
+  --acc:#7cc6a4; --acc-ink:#0f1612; --acc-soft:#1f3229;
+  --good:#6fcf98; --good-soft:#1c3226; --bad:#f08a80; --bad-soft:#3d1f1d; --gold:#e3bf6a; --gold-soft:#3a3018; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111714; --surface:#19211d; --ink:#e8efeb; --muted:#9fb0a8; --line:#2d3a34;
+  --acc:#7cc6a4; --acc-ink:#0f1612; --acc-soft:#1f3229;
+  --good:#6fcf98; --good-soft:#1c3226; --bad:#f08a80; --bad-soft:#3d1f1d; --gold:#e3bf6a; --gold-soft:#3a3018; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px}
+.wrap{max-width:700px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+header.top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-weight:700;font-size:1.25rem}
+.brand small{display:block;font-family:var(--f-body);font-weight:500;font-size:.78rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.meta{font-family:var(--f-mono);font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums;display:flex;gap:14px}
+.meta b{color:var(--ink);font-weight:500}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:28px clamp(18px,4vw,34px)}
+h1,h2{font-family:var(--f-display);font-weight:600;text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(1.7rem,4.5vw,2.3rem)} h2{font-size:1.35rem}
+p{margin:0}
+.lede{color:var(--muted);max-width:62ch}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0;padding:0;list-style:none}
+.facts li{border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+.facts .n{font-family:var(--f-display);font-size:1.6rem;font-weight:700;color:var(--acc);display:block;line-height:1.1}
+.facts .l{font-size:.8rem;color:var(--muted)}
+.tbl{font-size:.88rem;color:var(--muted)}
+.tbl table{border-collapse:collapse;width:100%;margin-top:6px;font-variant-numeric:tabular-nums}
+.tbl td{padding:6px 0;border-top:1px solid var(--line)}
+.tbl td:last-child{text-align:right;font-family:var(--f-mono);color:var(--ink)}
+.stack{display:flex;flex-direction:column;gap:16px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+button{font:inherit;cursor:pointer;border-radius:10px;padding:11px 20px;font-weight:600;border:1px solid transparent}
+button:focus-visible,.opt:focus-visible,select:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.primary{background:var(--acc);color:var(--acc-ink)}
+.primary:disabled,.ghost:disabled{opacity:.4;cursor:not-allowed}
+.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+label.chk{display:flex;gap:8px;align-items:center;font-size:.9rem;color:var(--muted)}
+select{font:inherit;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.progress{height:6px;background:var(--line);border-radius:99px;overflow:hidden}
+.progress span{display:block;height:100%;background:var(--acc);transition:width .25s}
+.eyebrow{font-size:.75rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.qtext{font-family:var(--f-display);font-size:clamp(1.2rem,3.4vw,1.45rem);font-weight:600;line-height:1.35;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.opt{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;background:var(--surface);color:var(--ink);border:1.5px solid var(--line);border-radius:10px;padding:13px 16px;font-weight:500}
+.opt:hover{border-color:var(--acc)}
+.opt .k{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
+.opt[aria-checked="true"]{border-color:var(--acc);background:var(--acc-soft)}
+.opt[aria-checked="true"] .k{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.hint{font-size:.82rem;color:var(--muted)}
+.score{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.big{font-family:var(--f-display);font-weight:700;font-size:clamp(3rem,12vw,4.4rem);line-height:1;font-variant-numeric:tabular-nums}
+.big small{font-size:.4em;color:var(--muted);font-weight:600}
+.pill{display:inline-block;padding:4px 12px;border-radius:99px;font-weight:700;font-size:.85rem;letter-spacing:.04em;text-transform:uppercase}
+.pill.pass{background:var(--good-soft);color:var(--good)}
+.pill.dist{background:var(--gold-soft);color:var(--gold)}
+.pill.fail{background:var(--bad-soft);color:var(--bad)}
+.lo-bars{display:flex;flex-direction:column;gap:10px}
+.lo{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;font-size:.9rem}
+.lo .bar{grid-column:1/-1;height:6px;background:var(--line);border-radius:99px;overflow:hidden}
+.lo .bar span{display:block;height:100%;background:var(--acc)}
+.lo .v{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.review{display:flex;flex-direction:column;gap:14px;margin:0;padding:0;list-style:none}
+.rv{border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.rv .q{font-weight:600}
+.ans{font-size:.92rem;padding:7px 11px;border-radius:8px}
+.ans.you{background:var(--bad-soft);color:var(--bad)}
+.ans.right{background:var(--good-soft);color:var(--good)}
+.ans b{font-weight:700}
+.why{font-size:.9rem;color:var(--muted)}
+.allright{color:var(--good);font-weight:600}
+.timeup{color:var(--bad);font-weight:600}
+footer{text-align:center}
+@media (max-width:520px){.facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Level 2 Award in Wines<small>Unofficial mock examination</small></div>
+    <div class="meta" id="meta" hidden><span>Q <b id="mq">1</b>/<span id="mn">50</span></span><span id="mtimer">⏱ <b id="mt">60:00</b></span></div>
+  </header>
+
+  <section class="card stack" id="start">
+    <h1>50 questions, 60 minutes, pass at 55%</h1>
+    <p class="lede">Each attempt draws a fresh paper at random from a bank of <span id="banksize">300+</span> questions written against the WSET Level 2 Award in Wines specification, weighted the same way as the real exam.</p>
+    <ul class="facts">
+      <li><span class="n">50</span><span class="l">multiple-choice</span></li>
+      <li><span class="n">60</span><span class="l">minutes</span></li>
+      <li><span class="n">28</span><span class="l">to pass (55%)</span></li>
+      <li><span class="n">43</span><span class="l">for distinction</span></li>
+    </ul>
+    <div class="tbl">
+      Weighting by learning outcome
+      <table id="wtable"></table>
+    </div>
+    <div class="tbl">
+      Grade bands
+      <table>
+        <tr><td>Pass with distinction</td><td>85%+ (43+)</td></tr>
+        <tr><td>Pass with merit</td><td>70–84% (35–42)</td></tr>
+        <tr><td>Pass</td><td>55–69% (28–34)</td></tr>
+        <tr><td>Fail</td><td>below 55%</td></tr>
+      </table>
+    </div>
+    <div class="row">
+      <label class="chk" for="mode">Paper</label>
+      <select id="mode">
+        <option value="full">Full mock exam (50 questions)</option>
+        <option value="1">Practice: LO1 only (15)</option>
+        <option value="2">Practice: LO2 only (15)</option>
+        <option value="3">Practice: LO3 only (20)</option>
+        <option value="4">Practice: LO4 only (20)</option>
+        <option value="5">Practice: LO5 only (15)</option>
+        <option value="6">Practice: LO6 only (15)</option>
+      </select>
+    </div>
+    <div class="row">
+      <button class="primary" id="go">Start</button>
+      <label class="chk"><input type="checkbox" id="timed" checked> Timed</label>
+    </div>
+    <p class="hint" id="best"></p>
+  </section>
+
+  <section class="card stack" id="quiz" hidden>
+    <div class="progress"><span id="bar" style="width:0%"></span></div>
+    <div class="eyebrow" id="qlo"></div>
+    <p class="qtext" id="qtext"></p>
+    <ul class="opts" id="opts" role="radiogroup" aria-labelledby="qtext"></ul>
+    <div class="row" style="justify-content:space-between">
+      <button class="ghost" id="prev">Back</button>
+      <button class="primary" id="next" disabled>Next</button>
+    </div>
+    <p class="hint">Tip: press 1–4 to choose, Enter for next.</p>
+  </section>
+
+  <section class="stack" id="results" hidden>
+    <div class="card stack">
+      <p class="timeup" id="timeup" hidden>Time ran out. Unanswered questions were marked wrong.</p>
+      <div class="score">
+        <div class="big" id="score">0</div>
+        <div class="stack" style="gap:6px">
+          <span class="pill" id="verdict"></span>
+          <span class="hint" id="pct"></span>
+        </div>
+      </div>
+      <div class="lo-bars" id="lobars"></div>
+      <div class="row"><button class="primary" id="again">Take another paper</button></div>
+    </div>
+    <div class="card stack">
+      <h2 id="revh">Questions to review</h2>
+      <ul class="review" id="review"></ul>
+    </div>
+  </section>
+
+  <footer class="hint">Unofficial practice quiz. Not affiliated with or endorsed by the Wine &amp; Spirit Education Trust (WSET). Questions are original, written against the published Level 2 Award in Wines specification.</footer>
+</div>
+
+<script>
+const LO_NAMES={1:"LO1 · Vineyard and environment",2:"LO2 · Winemaking and bottle ageing",3:"LO3 · Principal grape varieties",4:"LO4 · Regionally important grapes",5:"LO5 · Sparkling and fortified",6:"LO6 · Storage, service and food"};
+const RAW=[
+// LO1 — environment and grape growing. Format: [lo, topic, question, [correct first, ...distractors], explanation, keepOrder?, ansIndexIfKept?]
+[1,"Parts of a grape","Which part of the grape gives a wine its colour?",["Skin","Pulp","Seeds","Stems"],"Colour comes from the skin. That is why red wines are fermented with the skins."],
+[1,"Parts of a grape","The pulp of a grape provides the winemaker with:",["Sugar, acids, water and flavours","Colour and tannins only","Tannins only","Colour, tannins and flavours"],"Pulp = sugar, acids, water and flavours. Skins = colour, tannins and flavours. Seeds and stems = tannins."],
+[1,"Parts of a grape","Grape seeds and stems mainly contribute:",["Tannins","Sugar","Colour","Acidity"],"Seeds and stems contain tannins, which can be harsh and bitter, so winemakers avoid crushing the seeds."],
+[1,"Parts of a grape","Which parts of the grape contain tannins?",["Skins, seeds and stems","Pulp only","Juice and pulp","Only the seeds"],"Tannins are found in the skins, seeds and stems, not in the pulp."],
+[1,"Vine requirements","Which of the following is NOT one of the things a vine needs to grow grapes?",["Fog","Sunlight","Carbon dioxide","Nutrients"],"Vines need warmth, sunlight, water, nutrients and carbon dioxide. Fog is a climatic influence, not a requirement."],
+[1,"Vine requirements","A vine uses sunlight, water and carbon dioxide to produce sugar through:",["Photosynthesis","Fermentation","Malolactic conversion","Véraison"],"Photosynthesis in the leaves makes the sugar that is stored in the grapes."],
+[1,"Grape formation","Which is the correct order of grape formation?",["Flowering, fruit set, véraison","Fruit set, flowering, véraison","Véraison, flowering, fruit set","Flowering, véraison, fruit set"],"Flowers bloom, some become berries (fruit set), then véraison marks the start of ripening.",true,0],
+[1,"Grape formation","Véraison is the stage when:",["Grapes change colour and start to ripen","Flowers appear on the vine","Grapes are picked","Yeast begins fermentation"],"At véraison black grapes turn from green to red/black, white grapes become more translucent, and ripening begins."],
+[1,"Grape formation","'Fruit set' describes the point at which:",["Fertilised flowers start to develop into grapes","Grapes change colour","Grapes are fully ripe","Grapes are frozen on the vine"],"After flowering, fertilised flowers set as small hard green berries."],
+[1,"Ripening","As grapes ripen, what happens to sugar and acid levels?",["Sugar rises and acid falls","Sugar falls and acid rises","Both rise","Both fall"],"Ripening increases sugar (potential alcohol) and reduces acidity."],
+[1,"Ripening","As black grapes ripen, their tannins typically become:",["Riper and less bitter","More bitter and green","Completely absent","Concentrated in the pulp"],"Unripe tannins taste green and bitter; ripe tannins are softer."],
+[1,"Ripening","As white grapes ripen, their aromas typically move from:",["Green fruit, to citrus and stone fruit, to tropical fruit","Tropical fruit, to citrus, to green fruit","Red fruit, to black fruit","Dried fruit, to fresh fruit"],"Unripe: green apple; ripe: citrus and stone fruit (peach); very ripe: tropical fruit (pineapple, mango)."],
+[1,"Ripening","As black grapes ripen, their fruit aromas typically move from:",["Red fruit towards black fruit","Black fruit towards red fruit","Tropical fruit towards citrus","Citrus towards green fruit"],"Less ripe black grapes show red fruit (cranberry, red cherry); riper grapes show black fruit (blackberry, blackcurrant), then jammy fruit."],
+[1,"Ripening","Wine made from unripe black grapes is most likely to show:",["Herbaceous flavours and green, bitter tannins","Jammy fruit and high alcohol","Tropical fruit","Honey and dried fruit"],"Unripe black grapes give green/herbaceous notes, high acidity and harsh tannins."],
+[1,"Ripening","Grapes left on the vine after normal harvest to become extra-ripe are used to make:",["Late harvest sweet wines","Sparkling base wines","Light, high-acid whites","Rosé wines by short maceration"],"Extra-ripe (late harvest) grapes have concentrated sugar and are used for sweet wines."],
+[1,"Climate","Compared with a warm climate, a cool climate typically gives wines with:",["Higher acidity, lower alcohol and less ripe fruit","Lower acidity, higher alcohol and riper fruit","More tannin and more alcohol","More sugar and less acidity"],"Cool climates ripen grapes less: more acid, less sugar, fresher fruit."],
+[1,"Climate","Which description best fits a black grape grown in a warm climate?",["Riper black fruit, fuller body and higher alcohol","Red fruit, high acidity and light body","Green, herbaceous flavours and low alcohol","Pale colour and very high acidity"],"Warmth gives riper fruit, more sugar (alcohol) and fuller body."],
+[1,"Climatic influences","Generally, as you move further from the equator, the climate becomes:",["Cooler","Warmer","Wetter","Drier"],"Higher latitudes receive less heat, so vineyards there are cooler."],
+[1,"Climatic influences","Vineyards at high altitude are generally:",["Cooler than those at low altitude","Warmer than those at low altitude","Exactly the same temperature","Always more humid"],"Temperature falls as altitude increases, so altitude can make warm regions suitable for quality wine (e.g. Mendoza)."],
+[1,"Climatic influences","In the northern hemisphere, a vineyard slope facing south will usually:",["Receive more sunlight and heat","Receive less sunlight","Be colder than a north-facing slope","Have no difference in ripening"],"Aspect matters: slopes facing the equator catch more sun. In the southern hemisphere, north-facing slopes do this."],
+[1,"Climatic influences","How can mountains benefit a vineyard?",["By sheltering it from rain and cold winds","By always increasing rainfall","By making the vineyard warmer at higher altitude","By preventing photosynthesis"],"Mountain ranges can create a rain shadow and shelter vineyards (e.g. the Vosges protect Alsace)."],
+[1,"Climatic influences","A large body of water such as a sea or river near a vineyard tends to:",["Moderate temperatures, cooling summers and warming winters","Make temperatures more extreme","Increase the risk of frost","Stop grapes from ripening"],"Water warms and cools slowly, so it reduces temperature extremes."],
+[1,"Climatic influences","Cold ocean currents and the fog they create typically:",["Cool the vineyard","Warm the vineyard","Increase sugar levels sharply","Prevent rain"],"Fog and cold currents cool vineyards, e.g. coastal California and Casablanca Valley in Chile."],
+[1,"Climatic influences","Stony soils can help grapes ripen because they:",["Retain heat and release it at night","Hold large amounts of water","Block sunlight","Add sugar to the grapes"],"Stones absorb heat in the day and radiate it back, which helps ripening (e.g. the gravel soils of the Médoc)."],
+[1,"Weather","Spring frost is dangerous for vines because it can:",["Kill new shoots and buds, reducing the crop","Increase sugar in the grapes","Cause noble rot","Improve fruit set"],"Frost in spring damages new growth and can greatly reduce yields."],
+[1,"Weather","Heavy rain just before harvest can:",["Dilute the grapes and encourage rot","Increase sugar concentration","Cause frost damage","Improve acidity balance"],"Grapes swell with water, flavours are diluted, and damp conditions encourage rot."],
+[1,"Weather","Hail is a problem in the vineyard because it can:",["Physically damage leaves, shoots and grapes","Increase the alcohol level","Cause véraison to start early","Improve concentration"],"Hail can destroy part or all of a crop in minutes."],
+[1,"Grape-growing options","Why do growers train vines?",["To position the leaves and grapes, for example to improve exposure to sunlight","To add sugar to the grapes","To make the grapes ferment","To change the grape variety"],"Training shapes the vine to manage sunlight, air flow and ease of working."],
+[1,"Grape-growing options","Winter pruning is mainly used to:",["Control the number of buds and so the size of the crop","Remove leaves before harvest","Add nutrients to the soil","Protect against hail"],"Pruning determines how many buds grow, which controls yield."],
+[1,"Grape-growing options","Irrigation is most likely to be used in:",["Dry, warm regions where it is permitted","Very wet, cool regions","Every European appellation","Regions with heavy autumn rain"],"Irrigation supplies water in dry regions; it is restricted in many European PDOs."],
+[1,"Grape-growing options","Spraying in the vineyard is used to:",["Protect the vine against pests and diseases","Increase the alcohol in the wine","Change the colour of the grapes","Speed up fermentation"],"Spraying controls fungal diseases and pests."],
+[1,"Grape-growing options","Organic grape growing means:",["Avoiding synthetic fertilisers, herbicides and pesticides","Using only machine harvesting","Adding sugar to all wines","Growing only white grapes"],"Organic viticulture avoids most synthetic chemicals."],
+[1,"Grape-growing options","Very high yields in the vineyard usually lead to:",["Diluted flavours and lower quality","More concentrated flavours","Higher tannins","Greater ageing potential"],"Lower yields generally give more concentrated grapes; very high yields dilute flavour."],
+[1,"Grape-growing options","An advantage of hand harvesting over machine harvesting is that:",["Pickers can select only healthy grapes and keep bunches whole","It is always cheaper","It is faster on large flat vineyards","It can be done at night more easily"],"Hand harvesting allows selection and whole bunches; machines are faster and cheaper on suitable land."],
+[1,"Concentrating sugars","Noble rot (Botrytis cinerea) develops best when there are:",["Misty, humid mornings followed by dry, sunny afternoons","Constant heavy rain","Freezing temperatures","Long periods of drought"],"Morning humidity lets the fungus grow; dry afternoons stop it turning into harmful grey rot."],
+[1,"Concentrating sugars","Noble rot concentrates the grape by:",["Making tiny holes in the skin so water evaporates","Adding sugar to the pulp","Freezing the water in the grape","Splitting the grape open"],"Water evaporates, concentrating sugar, acid and flavour. It also adds honey and marmalade notes."],
+[1,"Concentrating sugars","Icewine (Eiswein) is made from grapes that are:",["Frozen on the vine and pressed while still frozen","Dried on straw mats","Affected by noble rot","Picked early and chilled in the winery"],"Most of the water stays as ice in the press, so only a very sweet, concentrated juice is extracted."],
+[1,"Concentrating sugars","Which grapes are typically used for Icewine/Eiswein?",["High-acid varieties such as Riesling","Thick-skinned black grapes only","Grapes affected by grey rot","Any unripe grapes"],"High acidity balances the intense sweetness; Riesling is a classic choice."],
+[1,"Labelling terms","Compared with a PGI, a PDO wine generally:",["Comes from a smaller area with stricter rules","Comes from a larger area with fewer rules","Can use grapes from anywhere in Europe","Is always sweeter"],"PDOs have tighter rules on varieties, yields and methods; PGIs give producers more freedom."],
+[1,"Labelling terms","In France, the PGI category is shown on labels as:",["IGP or Vin de Pays","AOC or AOP","DOCG","Qualitätswein"],"French PGI = Indication Géographique Protégée (IGP) / Vin de Pays. AOC/AOP is PDO."],
+[1,"Labelling terms","Which of these is an Italian PDO term?",["DOCG","IGT","IGP","Vino de la Tierra"],"Italy: DOCG and DOC are PDO; IGT is PGI."],
+[1,"Labelling terms","Italy's highest-ranking quality category is:",["DOCG","DOC","IGT","Vino da Tavola"],"DOCG (Denominazione di Origine Controllata e Garantita) sits above DOC."],
+[1,"Labelling terms","In Spain, which category is a PGI?",["Vino de la Tierra","DOCa","DO","DOCG"],"Spain: DOCa and DO are PDOs; Vino de la Tierra is PGI."],
+[1,"Labelling terms","In Spain, DOCa ranks:",["Above DO","Below DO","Below Vino de la Tierra","The same as IGP"],"DOCa (Denominación de Origen Calificada) is the top category; Rioja and Priorat hold it."],
+[1,"Labelling terms","Which German term is the equivalent of a PGI?",["Landwein","Prädikatswein","Qualitätswein","Kabinett"],"Qualitätswein and Prädikatswein are PDO; Landwein is PGI."],
+[1,"Labelling terms","Which two German categories are PDO wines?",["Qualitätswein and Prädikatswein","Landwein and Qualitätswein","Landwein and Prädikatswein","Kabinett and Landwein"],"Both Qualitätswein and Prädikatswein are German PDO categories."],
+[1,"Labelling terms","Outside the EU, wine regions are generally labelled as:",["Geographical Indications (GIs)","AOCs","DOCGs","Prädikatswein"],"New World countries use GIs (e.g. Barossa Valley GI) defining areas, usually with fewer production rules than EU PDOs."],
+[1,"Labelling terms","'Vieilles vignes' or 'Old vines' on a label indicates that:",["The wine is made from old vines, which tend to give lower yields of concentrated grapes","The wine has been aged for many years","The wine is a PDO","The grapes were affected by noble rot"],"Old vines tend to produce smaller crops of more concentrated fruit. The term is often not legally defined."],
+[1,"Labelling terms","A vintage date on a still wine label tells you:",["The year the grapes were harvested","The year the wine was bottled","The year the wine will be ready to drink","How long the wine was aged in oak"],"Vintage = harvest year."],
+[1,"Labelling terms","'Vendanges tardives' on a French label (especially Alsace) means:",["Late harvest","Old vines","Noble rot","Icewine"],"Vendanges tardives = late harvest, usually meaning a sweet wine from extra-ripe grapes."],
+
+// LO2 — winemaking and bottle ageing
+[2,"Fermentation","During alcoholic fermentation, yeast converts sugar into:",["Alcohol and carbon dioxide","Acid and tannin","Water and oxygen","Glycerol and acid only"],"Yeast + sugar → alcohol + carbon dioxide (and heat)."],
+[2,"Fermentation","Besides alcohol and carbon dioxide, fermentation also produces:",["Heat","Tannin","Colour","Sugar"],"Fermentation generates heat, so temperature control is important."],
+[2,"Fermentation","If fermentation continues until all the sugar has been converted, the wine will be:",["Dry","Sweet","Medium-sweet","Fortified"],"No sugar left = dry."],
+[2,"Winemaking process","Which is the correct order of the main stages for a still white wine?",["Crushing, pressing, fermentation, storage/maturation, packaging","Crushing, fermentation, pressing, storage/maturation, packaging","Pressing, packaging, crushing, fermentation, maturation","Fermentation, crushing, pressing, packaging, maturation"],"White wines are pressed before fermentation, so only juice is fermented.",true,0],
+[2,"Winemaking process","Which is the correct order of the main stages for a still red wine?",["Crushing, fermentation, pressing, storage/maturation, packaging","Crushing, pressing, fermentation, storage/maturation, packaging","Pressing, crushing, fermentation, packaging, maturation","Fermentation, crushing, packaging, pressing, maturation"],"Red wines ferment with their skins and are pressed after fermentation.",true,0],
+[2,"Winemaking process","For red wines, pressing usually takes place:",["After fermentation","Before crushing","Before fermentation","After bottling"],"The skins stay with the fermenting juice to extract colour and tannin, then are pressed."],
+[2,"Winemaking process","Why are white grapes pressed before fermentation?",["To separate the juice from the skins so little colour or tannin is extracted","To add tannin","To extract more colour","To start the fermentation"],"White wine is made from the juice alone."],
+[2,"Adjustments","Adding sugar to grape juice before or during fermentation is done to:",["Increase the final alcohol level","Make the wine sweet","Increase the acidity","Add colour"],"The extra sugar is fermented into alcohol. It is most common in cool climates where grapes struggle to ripen."],
+[2,"Adjustments","Adding acid to grape juice is most likely in:",["Warm climates, where grapes can be low in acid","Cool climates, where grapes are very acidic","Every sparkling wine","Only icewine production"],"Warm-climate grapes lose acidity as they ripen, so acid may be added for balance and freshness."],
+[2,"Adjustments","Adding sugar to raise alcohol is most common in:",["Cool climates","Hot, dry climates","Regions making fortified wine only","Tropical regions"],"In cool climates grapes may not reach enough sugar for the desired alcohol."],
+[2,"Fermentation temperature","Compared with red wines, white wines are usually fermented:",["At cooler temperatures","At warmer temperatures","At exactly the same temperature","Without temperature control"],"Cool fermentation keeps fresh, fruity aromas in white wines."],
+[2,"Fermentation temperature","Why are red wines fermented at warmer temperatures than whites?",["To help extract colour and tannin from the skins","To keep delicate floral aromas","To stop fermentation","To lower the alcohol"],"Warmth helps extraction of colour, tannin and flavour."],
+[2,"Fermentation temperature","Cool fermentation temperatures help to:",["Preserve fresh, fruity aromas","Extract tannin","Create nutty, oxidised flavours","Increase colour"],"Low temperatures retain delicate primary fruit aromas."],
+[2,"Red winemaking","'Extraction' in red winemaking refers to:",["Drawing colour, tannin and flavour out of the grape skins","Removing alcohol from the wine","Taking the yeast out of the wine","Adding acid to the juice"],"Techniques such as punching down or pumping over the cap of skins increase extraction."],
+[2,"Red winemaking","During red wine fermentation, the skins rise to form a 'cap'. Winemakers break it up or mix it back in to:",["Increase extraction of colour and tannin","Lower the temperature","Make the wine sweet","Add oak flavour"],"Keeping the skins in contact with the liquid aids extraction."],
+[2,"Rosé","The most common way to make rosé wine is:",["Short maceration of black grapes on their skins","Fermenting white grapes with their skins","Adding colouring","Ageing white wine in red wine barrels"],"Black grapes are left on their skins for a short time (hours to a few days) before the juice is run off."],
+[2,"Rosé","Besides short maceration, rosé can also be made by:",["Blending a small amount of red wine into white wine","Freezing black grapes","Using noble rot","Fermenting in new oak"],"Blending is mainly used for rosé sparkling wines such as rosé Champagne."],
+[2,"Sweet wine","One way to make a sweet wine is to:",["Stop fermentation before all the sugar has been used up","Ferment at a warm temperature","Add acid","Use malolactic conversion"],"Stopping fermentation (e.g. by removing or killing the yeast) leaves residual sugar."],
+[2,"Sweet wine","Another way to make a wine sweet is to:",["Add a sweetening component, such as unfermented grape juice, after fermentation","Add tannin","Leave it on the lees","Age it in stainless steel"],"Adding sweetness to a dry wine is common for inexpensive medium-sweet wines."],
+[2,"Vessels","Which vessels are generally considered neutral, adding no flavour to the wine?",["Stainless steel and concrete","New oak barrels","Old and new oak barrels","Small new oak barrels"],"Steel and concrete are inert; oak can add flavour and allow oxygen in."],
+[2,"Vessels","Stainless steel tanks are especially useful because they:",["Are easy to clean and allow precise temperature control","Add vanilla flavours","Allow oxygen to soften the wine","Add tannin"],"Steel preserves fresh, fruity styles."],
+[2,"Oak","Which flavours can new oak add to a wine?",["Vanilla, toast, smoke, cloves and coconut","Green apple and lemon","Grass and green pepper","Raspberry and strawberry"],"These are typical oak-derived flavours."],
+[2,"Oak","Which barrels give the most oak flavour to a wine?",["Small, new barrels","Large, old barrels","Large, new barrels","Small, old barrels"],"New oak has more flavour to give; smaller barrels have more surface area per litre of wine."],
+[2,"Oak","Old oak barrels are used mainly to:",["Allow slow oxygen contact without adding much oak flavour","Add strong vanilla and toast flavours","Keep the wine completely away from oxygen","Make the wine sparkling"],"Old oak has little flavour left but still lets small amounts of oxygen in, softening tannins and developing flavours."],
+[2,"Oak","A barrel with a heavy toast level will tend to add:",["More pronounced smoky, toasty flavours","More green fruit flavours","More acidity","No flavour at all"],"Barrels are toasted over a fire during making; heavier toast gives smokier, toastier notes."],
+[2,"Oak","Besides flavour, maturation in oak barrels can:",["Soften tannins through slow exposure to oxygen","Increase the sugar content","Add carbon dioxide","Make the colour more purple"],"Gentle oxygen exposure helps tannins soften and flavours develop."],
+[2,"Malolactic conversion","Malolactic conversion turns:",["Sharp malic acid into softer lactic acid","Sugar into alcohol","Lactic acid into malic acid","Alcohol into acid"],"It lowers acidity and makes the wine taste softer."],
+[2,"Malolactic conversion","Which flavour can malolactic conversion add to a wine?",["Butter","Black pepper","Petrol","Grass"],"It can create buttery flavours, often noticed in some Chardonnays."],
+[2,"Malolactic conversion","Malolactic conversion is used for:",["Almost all red wines and some white wines","Only sparkling wines","Only aromatic white wines such as Riesling","Only fortified wines"],"Nearly all reds go through it; for whites it is a style choice. Aromatic, fresh whites usually avoid it."],
+[2,"Lees","Lees are:",["Dead yeast cells left after fermentation","Grape skins after pressing","Oak chips","Tartrate crystals"],"Ageing wine on its lees can add body and bready or biscuity flavours."],
+[2,"Lees","Leaving a wine in contact with its lees can add:",["Body and bready, biscuity flavours","Tannin and colour","Green, herbaceous flavours","Sweetness"],"Lees contact gives texture and savoury yeasty notes."],
+[2,"Blending","Which is NOT a usual reason for blending wines?",["To increase the residual sugar of every wine","To make a consistent style year after year","To add complexity","To create a particular style"],"Blending is used for consistency, complexity and style."],
+[2,"Blending","Large brands blend wines from many vineyards mainly to achieve:",["Consistency from year to year","A single-vineyard character","Higher tannin","Noble rot character"],"Blending smooths out differences between vintages and sites."],
+[2,"Bottle ageing","As a red wine ages in bottle, its colour usually changes from:",["Purple or ruby towards garnet and tawny","Garnet towards purple","Lemon towards gold","Pale pink towards deep purple"],"Red wines lose colour and turn brick-red/tawny with age."],
+[2,"Bottle ageing","With bottle age, the tannins in a quality red wine typically become:",["Softer","Harsher","More numerous","Bitter and green"],"Tannins soften and become smoother over time."],
+[2,"Bottle ageing","As a white wine ages in bottle, its colour usually changes from:",["Lemon towards gold and then amber","Gold towards lemon","Amber towards green","Ruby towards garnet"],"White wines deepen in colour with age."],
+[2,"Bottle ageing","Which flavours develop in red wines with bottle age?",["Earthy, leather and mushroom notes","Fresh raspberry and banana","Grass and green pepper","Pear drop and bubblegum"],"Fresh fruit fades and savoury, earthy notes appear."],
+[2,"Bottle ageing","Which flavours can develop in white wines with bottle age?",["Honey, nuts and dried fruit","Fresh green apple","Strawberry and cherry","Black pepper"],"Fresh fruit aromas evolve into honey, nutty and dried-fruit notes."],
+[2,"Bottle ageing","Most wines produced in the world are:",["Made to be drunk young","Improved by ten years of bottle ageing","Fortified","Made from noble rot grapes"],"Only a small proportion of wines benefit from long ageing."],
+
+// LO3 — principal grape varieties
+// ---- Chardonnay
+[3,"Chardonnay","Cool-climate Chardonnay typically shows:",["Green fruit and citrus with high acidity","Tropical fruit with low acidity","Black fruit and high tannin","Rose and lychee aromas"],"Cool climates give green apple, lemon and high acidity, e.g. Chablis."],
+[3,"Chardonnay","Warm-climate Chardonnay typically shows:",["Tropical fruit such as pineapple and banana, with fuller body","Green apple and very high acidity","Red cherry and high tannin","Grass and green pepper"],"Warmer sites give riper, tropical fruit and more body."],
+[3,"Chardonnay","Chardonnay from a moderate climate (e.g. the Côte de Beaune) typically shows:",["Stone fruit and citrus, often with oak and creamy notes","Green pepper and grass","Black fruit and pepper","Lychee and rose"],"Moderate climates give stone fruit (peach) and citrus; top Burgundies often use oak and malolactic conversion."],
+[3,"Chardonnay","Chardonnay is often described as a 'winemaker's grape' because:",["Its neutral character takes on flavours from techniques such as oak, lees and malolactic conversion","It cannot be oaked","It is always sweet","It is only used for sparkling wine"],"Chardonnay's relatively neutral flavour makes it responsive to winemaking choices."],
+[3,"Chardonnay","Chablis is typically:",["Dry, high in acidity, with green apple and citrus flavours","Sweet, with tropical fruit","Full-bodied red","Heavily oaked with butter and vanilla"],"Chablis is cool-climate Chardonnay from northern Burgundy, often unoaked or lightly oaked."],
+[3,"Chardonnay","Which of these Burgundy wines is made from Chardonnay?",["Meursault","Pommard","Gevrey-Chambertin","Nuits-Saint-Georges"],"Meursault is a white village in the Côte de Beaune. The other three are reds from Pinot Noir."],
+[3,"Chardonnay","Puligny-Montrachet is best described as:",["A high-quality white Burgundy from Chardonnay","A red Burgundy from Pinot Noir","A sparkling wine from the Loire","A sweet wine from Bordeaux"],"Puligny-Montrachet is one of the top white villages of the Côte de Beaune."],
+[3,"Chardonnay","Mâcon wines (from southern Burgundy) are typically:",["Medium-bodied, ripe and fruity, usually with little or no oak","Very full-bodied with heavy new oak","Sweet and botrytised","Red and tannic"],"Mâcon is warmer than Chablis; wines are typically fruity and unoaked, made for early drinking."],
+[3,"Chardonnay","Pouilly-Fuissé is a white wine from which part of Burgundy?",["The Mâconnais","Chablis","The Côte de Nuits","Beaujolais"],"Pouilly-Fuissé is the best-known appellation of the Mâconnais, often richer and oaked."],
+[3,"Chardonnay","Which regions are known for cool-climate Chardonnay outside Europe?",["Carneros, Yarra Valley and Casablanca Valley","Barossa Valley, Napa Valley floor and Mendoza","Douro and Jerez","Puglia and Sicily"],"Carneros (fog), Yarra Valley and Casablanca (ocean influence) are cool."],
+[3,"Chardonnay","Adelaide Hills Chardonnay is likely to be:",["Fresher and more restrained than Chardonnay from the warm Australian lowlands","Sweet and fortified","Red and tannic","Made with noble rot"],"The Adelaide Hills is an elevated, cooler area of South Australia."],
+[3,"Chardonnay","'South Eastern Australia' on a Chardonnay label indicates:",["A large GI used for inexpensive, fruity blends from several states","A single small vineyard","A Grand Cru","A cool, high-altitude sub-region"],"This huge GI allows blending across a wide area for consistent, affordable wines."],
+[3,"Chardonnay","Which Chardonnay is likely to have the highest acidity?",["Chablis","A Californian Chardonnay from a warm area","South Eastern Australia Chardonnay","A PGI Chardonnay from the South of France"],"Chablis is the coolest of these regions."],
+[3,"Chardonnay","Long-lived, high-quality Chardonnay can develop which flavours with bottle age?",["Nutty, honey and mushroom notes","Fresh banana and pear drop","Strawberry and cherry","Black pepper"],"Top white Burgundies develop complex nutty and savoury notes."],
+[3,"Chardonnay","Which South African region is noted for Chardonnay and Pinot Noir from a cool, coastal climate?",["Walker Bay","Stellenbosch","Western Cape interior","Swartland"],"Walker Bay is cooled by the ocean."],
+// ---- Sauvignon Blanc
+[3,"Sauvignon Blanc","Sauvignon Blanc typically has:",["High acidity and pronounced green, herbaceous aromas","Low acidity and honeyed aromas","High tannin and black fruit","Neutral flavours and low acidity"],"Grass, green pepper, gooseberry and asparagus with crisp acidity."],
+[3,"Sauvignon Blanc","Most Sauvignon Blanc is:",["Unoaked and made to be drunk young","Aged for many years in new oak","Fortified","Sweet"],"Its fresh aromas are best young; oak is used only for some styles (e.g. some Pessac-Léognan)."],
+[3,"Sauvignon Blanc","Sancerre and Pouilly-Fumé are made from:",["Sauvignon Blanc","Chardonnay","Chenin Blanc","Riesling"],"Both are in the Loire Valley and use Sauvignon Blanc."],
+[3,"Sauvignon Blanc","Which region is famous for pungent Sauvignon Blanc with gooseberry and passion fruit flavours?",["Marlborough","Barossa Valley","Mendoza","Rioja"],"Marlborough in New Zealand's South Island is the benchmark for this style."],
+[3,"Sauvignon Blanc","Compared with Marlborough Sauvignon Blanc, Sancerre is typically:",["Less pungently fruity, with more restrained, mineral flavours","Sweeter and more tropical","Red","Heavily oaked and fuller-bodied"],"Sancerre is more restrained; Marlborough is intensely aromatic."],
+[3,"Sauvignon Blanc","In Bordeaux, Sauvignon Blanc is usually blended with:",["Semillon","Chardonnay","Riesling","Viognier"],"Semillon adds body; Sauvignon Blanc adds acidity and aroma."],
+[3,"Sauvignon Blanc","Which Bordeaux appellation is known for high-quality, often oak-aged white blends of Sauvignon Blanc and Semillon?",["Pessac-Léognan","Pomerol","Saint-Émilion","Pauillac"],"Pessac-Léognan (and Graves) make quality whites; the others are red appellations."],
+[3,"Sauvignon Blanc","Touraine Sauvignon Blanc comes from which French region?",["Loire","Bordeaux","Burgundy","Alsace"],"Touraine is in the central Loire; typically fresh, simple and good value."],
+[3,"Sauvignon Blanc","Elgin and Constantia are cool regions known for Sauvignon Blanc in:",["South Africa","Chile","Australia","New Zealand"],"Both are cooled by altitude or ocean influence."],
+[3,"Sauvignon Blanc","Casablanca Valley in Chile is suited to Sauvignon Blanc because:",["Cool ocean influences and morning fog moderate temperatures","It is very hot and dry","It is at very high altitude in the Andes","It has noble rot every year"],"Cool Pacific breezes keep acidity fresh."],
+[3,"Sauvignon Blanc","Unripe Sauvignon Blanc grapes give wines with flavours of:",["Green pepper, grass and asparagus","Passion fruit and mango","Honey and marmalade","Black cherry"],"Riper grapes move towards passion fruit; less ripe grapes are more herbaceous."],
+// ---- Riesling
+[3,"Riesling","Which statement about Riesling is true?",["It has high acidity and can make wines from dry to lusciously sweet","It is usually aged in new oak","It has low acidity","It is a black grape"],"Riesling's acidity allows a wide range of sweetness levels while staying balanced."],
+[3,"Riesling","Riesling is rarely aged in new oak because:",["Winemakers want to preserve its pure fruit and floral aromas","It contains too much tannin","It cannot be fermented in barrels","It is always sparkling"],"Riesling is valued for its aromatic purity."],
+[3,"Riesling","With bottle age, quality Riesling can develop notes of:",["Honey, toast and petrol (kerosene)","Vanilla and coconut","Black pepper and leather","Green pepper and grass"],"Aged Riesling gains honey, toast and a distinctive petrol aroma."],
+[3,"Riesling","Which white grape is the speciality of both the Mosel and the Clare Valley?",["Riesling","Pinot Grigio","Gewurztraminer","Viognier"],"Riesling excels in the Mosel, Rheingau and Pfalz, and in Clare and Eden Valley."],
+[3,"Riesling","Mosel Riesling is typically:",["Light-bodied, low in alcohol and high in acidity, often with some sweetness","Full-bodied and high in alcohol","Red and tannic","Oaked with buttery flavours"],"The cool, steep Mosel gives delicate, light wines; many have some residual sugar."],
+[3,"Riesling","Compared with the Mosel, Rieslings from the Pfalz are often:",["Fuller-bodied and riper, with more dry styles","Lighter and lower in alcohol","Sparkling","Red"],"The Pfalz is warmer and drier, giving riper, fuller wines."],
+[3,"Riesling","Riesling from Alsace is typically:",["Dry, with fuller body and higher alcohol than most German Riesling","Very sweet and low in alcohol","Light and sparkling","Red"],"Alsace is sheltered and sunny; most Alsace Riesling is dry and fuller."],
+[3,"Riesling","Clare Valley and Eden Valley Rieslings are typically:",["Dry, with lime and citrus flavours, developing toast with age","Sweet and botrytised","Oaked with tropical flavours","Light reds"],"These Australian Rieslings are classically dry with lime fruit."],
+[3,"Riesling","Which German region is listed for Riesling in the specification?",["Rheingau","Rioja","Marlborough","Alsace Grand Cru"],"Mosel, Rheingau and Pfalz are the German Riesling regions in the specification."],
+[3,"Riesling","On a German label, 'Trocken' means:",["Dry","Off-dry","Sweet","Late harvest"],"Trocken = dry; Halbtrocken = off-dry (medium-dry)."],
+[3,"Riesling","On a German label, 'Halbtrocken' means:",["Off-dry","Dry","Very sweet","Sparkling"],"Halbtrocken is 'half-dry'."],
+[3,"Prädikatswein","Prädikatswein categories (Kabinett, Spätlese, etc.) are based on:",["The sugar level of the grapes at harvest","The final sweetness of the wine","The age of the vines","The amount of oak used"],"They reflect ripeness at harvest. A Spätlese may be dry or sweet depending on how it is made."],
+[3,"Prädikatswein","Which is the lightest Prädikat, made from fully ripe grapes?",["Kabinett","Spätlese","Auslese","Trockenbeerenauslese"],"Kabinett is the first level; wines are usually light and delicate."],
+[3,"Prädikatswein","'Spätlese' means:",["Late harvest","Selected berries","Icewine","Dry"],"Spätlese grapes are picked later, so are riper than Kabinett."],
+[3,"Prädikatswein","Auslese is made from:",["Selected bunches of very ripe grapes, some possibly with noble rot","Frozen grapes","Unripe grapes","Grapes picked before véraison"],"Auslese means 'selected harvest'."],
+[3,"Prädikatswein","Which Prädikat is the sweetest and most concentrated, made from individually picked shrivelled botrytised berries?",["Trockenbeerenauslese (TBA)","Beerenauslese (BA)","Spätlese","Kabinett"],"TBA = 'dried berry selection': rare, intensely sweet wines."],
+[3,"Prädikatswein","Beerenauslese (BA) wines are:",["Sweet wines made from individually selected overripe or botrytised berries","Dry wines from late-harvested grapes","Sparkling wines","Red wines from Pinot Noir"],"BA sits between Auslese and TBA."],
+[3,"Prädikatswein","Which German Prädikat is made from grapes frozen on the vine?",["Eiswein","Kabinett","Auslese","Spätlese"],"Eiswein = icewine."],
+[3,"Prädikatswein","Which is the correct order from least to most ripe at harvest?",["Kabinett, Spätlese, Auslese, Beerenauslese, Trockenbeerenauslese","Spätlese, Kabinett, Auslese, Trockenbeerenauslese, Beerenauslese","Auslese, Kabinett, Spätlese, Beerenauslese, Trockenbeerenauslese","Kabinett, Auslese, Spätlese, Trockenbeerenauslese, Beerenauslese"],"Kabinett → Spätlese → Auslese → BA → TBA (Eiswein is at least BA ripeness).",true,0],
+// ---- Pinot Grigio / Pinot Gris
+[3,"Pinot Grigio/Gris","Italian Pinot Grigio from Delle Venezie is typically:",["Light-bodied, dry, with delicate green fruit and citrus flavours","Full-bodied, off-dry, with honey and spice","Red with high tannin","Sweet and fortified"],"Italian Pinot Grigio is usually picked early for a light, neutral, refreshing style."],
+[3,"Pinot Grigio/Gris","Alsace Pinot Gris is typically:",["Fuller-bodied, with riper stone fruit and honey, sometimes off-dry","Light and neutral","Red","Sparkling"],"Alsace's sunny, dry climate gives richer, more intense Pinot Gris."],
+[3,"Pinot Grigio/Gris","Pinot Grigio and Pinot Gris are:",["The same grape variety, with names reflecting different styles","Two unrelated varieties","Black grapes used for red wine","Synonyms for Chardonnay"],"Same grape: 'Grigio' suggests the light Italian style, 'Gris' the richer Alsace style."],
+[3,"Pinot Grigio/Gris","Which Italian regions are listed in the specification for Pinot Grigio?",["Veneto, Delle Venezie and Friuli-Venezia Giulia","Tuscany and Piemonte","Puglia and Sicily","Abruzzo and Campania"],"These are in north-east Italy."],
+// ---- Pinot Noir
+[3,"Pinot Noir","Pinot Noir is a thin-skinned grape, so its wines tend to have:",["Pale colour and low to medium tannin","Deep colour and high tannin","Very high alcohol and black fruit","Low acidity"],"Thin skins mean less colour and tannin."],
+[3,"Pinot Noir","Typical young Pinot Noir flavours are:",["Red fruit such as strawberry, raspberry and red cherry","Blackcurrant and mint","Black pepper and blackberry","Lychee and rose"],"Riper examples move towards black cherry."],
+[3,"Pinot Noir","Pinot Noir grows best in:",["Cool and moderate climates","Very hot climates","Tropical climates","Only at sea level in warm areas"],"In hot climates it loses its delicate fruit and tastes jammy."],
+[3,"Pinot Noir","With bottle age, Pinot Noir can develop:",["Earthy, mushroom and forest floor notes","Grass and green pepper","Petrol and lime","Tropical fruit"],"Mature Pinot Noir gains savoury, earthy complexity."],
+[3,"Pinot Noir","Gevrey-Chambertin and Nuits-Saint-Georges are red wine villages in:",["The Côte de Nuits, Burgundy","Bordeaux's Left Bank","The Northern Rhône","The Loire"],"Both are Pinot Noir villages in the northern half of the Côte d'Or."],
+[3,"Pinot Noir","Beaune and Pommard are best known for:",["Red wines from Pinot Noir","White wines from Sauvignon Blanc","Sparkling wines","Sweet wines from Semillon"],"Both are in the Côte de Beaune; Pommard is especially known for reds."],
+[3,"Pinot Noir","A wine labelled 'Bourgogne' is:",["A regional Burgundy, the most basic level","A Grand Cru","A Premier Cru","A sparkling wine"],"Regional Bourgogne is below village, Premier Cru and Grand Cru."],
+[3,"Burgundy labels","What is the hierarchy of Burgundy wines from highest to lowest?",["Grand Cru, Premier Cru, village, regional","Premier Cru, Grand Cru, village, regional","Village, Grand Cru, Premier Cru, regional","Regional, village, Premier Cru, Grand Cru"],"Grand Cru vineyards are the top sites, then Premier Cru, then village, then regional Bourgogne.",true,0],
+[3,"Burgundy labels","Which of these regions has vineyards classified as Grand Cru?",["Chablis","Sancerre","Minervois","Côtes du Rhône"],"Chablis has Premier Cru and Grand Cru vineyards. The other regions do not use the term."],
+[3,"Pinot Noir","Which New Zealand region is known for ripe, intense Pinot Noir from a sunny, dry inland climate?",["Central Otago","Hawke's Bay","Gisborne","Auckland"],"Central Otago is the world's most southerly major wine region, with continental conditions."],
+[3,"Pinot Noir","Martinborough is a New Zealand region known for:",["Pinot Noir","Fortified wine","Malbec","Icewine"],"Martinborough, near Wellington, has a strong Pinot Noir reputation."],
+[3,"Pinot Noir","Which USA regions are listed in the specification for Pinot Noir?",["Sonoma, Carneros, Santa Barbara County and Oregon","Napa Valley floor and Lodi","Paso Robles only","Texas and Florida"],"These areas have cool influences such as fog or latitude."],
+[3,"Pinot Noir","Yarra Valley and Mornington Peninsula are cool Australian regions known for:",["Pinot Noir and Chardonnay","Fortified Muscat","Rich Barossa-style Shiraz","Semillon only"],"Both are in Victoria, with cooling influences."],
+[3,"Pinot Noir","Pinot Noir from Casablanca Valley, Chile, benefits from:",["Cool coastal influences","Very high altitude","Hot desert conditions","Noble rot"],"The Pacific cools the valley."],
+// ---- Merlot
+[3,"Merlot","Merlot typically has:",["Medium tannin, medium acidity and red plum to black fruit flavours","Very high tannin and very high acidity","Pale colour and very low tannin","Pronounced floral and lychee aromas"],"Merlot is softer and rounder than Cabernet Sauvignon."],
+[3,"Merlot","Merlot dominates the blends of which Bordeaux appellations?",["Saint-Émilion and Pomerol","Pauillac and Margaux","Médoc and Haut-Médoc","Sauternes and Graves"],"On the Right Bank, cooler clay soils suit Merlot."],
+[3,"Merlot","Merlot from a warm climate is likely to be:",["Full-bodied with black plum and fruitcake flavours","Light-bodied with very high acidity","Pale and herbaceous","Sweet"],"Warmer climates give riper, fuller Merlot."],
+[3,"Merlot","Merlot ripens earlier than Cabernet Sauvignon. In Bordeaux this means it:",["Is less likely to be unripe in cooler years","Never ripens","Is always picked after Cabernet","Cannot be blended"],"Early ripening makes Merlot reliable in Bordeaux's moderate climate."],
+[3,"Merlot","Which of these regions is listed in the specification for Merlot outside Europe?",["Hawke's Bay","Barossa Valley","Mendoza","Marlborough"],"Spec lists California, Napa, Sonoma, Central Valley, Stellenbosch, Margaret River and Hawke's Bay."],
+[3,"Merlot","Inexpensive, fruity, varietally labelled Merlot from France is most likely to carry which designation?",["Pays d'Oc IGP (South of France)","Pomerol AOC","Saint-Émilion Grand Cru","Pauillac AOC"],"PGI production in the South of France gives affordable varietal wines."],
+// ---- Cabernet Sauvignon
+[3,"Cabernet Sauvignon","Cabernet Sauvignon has thick skins, giving wines with:",["Deep colour and high tannin","Pale colour and low tannin","High sugar and low acidity","No tannin"],"Thick skins = colour and tannin."],
+[3,"Cabernet Sauvignon","Typical Cabernet Sauvignon flavours are:",["Blackcurrant and black cherry, sometimes with mint or green pepper","Strawberry and raspberry","Lychee and rose","Lemon and green apple"],"Cabernet's hallmark is blackcurrant, often with herbaceous notes."],
+[3,"Cabernet Sauvignon","Cabernet Sauvignon ripens late, so it needs:",["A moderate or warm climate","A very cool climate","No sunlight","Frost during the summer"],"In cool sites it remains herbaceous with harsh tannins."],
+[3,"Cabernet Sauvignon","Which Bordeaux appellations are dominated by Cabernet Sauvignon?",["Pauillac and Margaux","Pomerol and Saint-Émilion","Sauternes and Barsac","Entre-Deux-Mers"],"The Left Bank (Médoc) has warm gravel soils suited to Cabernet."],
+[3,"Cabernet Sauvignon","Why does Cabernet Sauvignon do well on the gravel soils of the Médoc?",["Gravel retains heat and drains well, helping the grapes ripen","Gravel is cold and wet","Gravel adds sugar","Gravel protects against hail"],"Heat retention helps a late-ripening grape."],
+[3,"Cabernet Sauvignon","Haut-Médoc, Pauillac and Margaux are found on Bordeaux's:",["Left Bank","Right Bank","Northern Rhône","Côte d'Or"],"The Left Bank lies west of the Gironde/Garonne."],
+[3,"Cabernet Sauvignon","Which Napa Valley sub-regions are listed for Cabernet Sauvignon?",["Oakville, Rutherford and Calistoga","Carneros only","Santa Barbara and Oregon","Russian River and Anderson Valley"],"These are prime Napa Cabernet districts."],
+[3,"Cabernet Sauvignon","Napa Valley Cabernet Sauvignon is typically:",["Full-bodied with ripe black fruit and new oak","Light-bodied with red fruit","Very herbaceous and high in acidity","Sweet and fortified"],"Napa's warm, sunny climate produces ripe, powerful wines."],
+[3,"Cabernet Sauvignon","Coonawarra is famous for Cabernet Sauvignon with:",["Blackcurrant and mint or eucalyptus notes","Tropical fruit","Strawberry and earthy notes","Low tannin and light body"],"Coonawarra (South Australia) has a moderate climate and distinctive red terra rossa soil."],
+[3,"Cabernet Sauvignon","Which Chilean regions are listed for Cabernet Sauvignon?",["Central Valley, Maipo Valley and Colchagua Valley","Casablanca Valley only","Elqui and Limarí","Bío-Bío and Malleco"],"Maipo and Colchagua are known for quality Chilean Cabernet."],
+[3,"Cabernet Sauvignon","Chilean Cabernet Sauvignon is often known for:",["Ripe blackcurrant with a herbaceous, minty note","Pale colour and strawberry flavours","High residual sugar","Petrol aromas"],"Chilean Cabernet often shows a mint/herbaceous character."],
+[3,"Cabernet Sauvignon","Which Australian regions are listed for Cabernet Sauvignon?",["Coonawarra and Margaret River","Barossa Valley and Hunter Valley","Yarra Valley and Mornington Peninsula","Clare and Eden Valley"],"Both are known for structured Cabernet."],
+[3,"Cabernet Sauvignon","Why is Cabernet Sauvignon often blended with Merlot?",["Merlot adds softness and fruit, filling out Cabernet's high tannin","Merlot adds very high acidity","Merlot is white and lightens the colour","Merlot makes the wine sweet"],"The blend balances structure with fleshy fruit."],
+[3,"Cabernet Sauvignon","Graves and Pessac-Léognan are best known for:",["Both red wines (largely Cabernet-based) and quality whites","Only sweet wines","Only rosé","Sparkling wines"],"These Left Bank areas produce both red and white wines."],
+// ---- Bordeaux labelling
+[3,"Bordeaux labels","'Bordeaux Supérieur' indicates a wine that:",["Meets slightly stricter rules than basic Bordeaux AOC","Is a Grand Cru Classé","Comes only from Pauillac","Is sweet"],"It has stricter rules on yield and alcohol than basic Bordeaux."],
+[3,"Bordeaux labels","'Cru Bourgeois' is a quality term used in:",["The Médoc","Burgundy","Champagne","Alsace"],"Cru Bourgeois recognises good Médoc châteaux outside the Grand Cru Classé ranks."],
+[3,"Bordeaux labels","'Grand Cru Classé' on a Bordeaux label indicates:",["A château included in an official classification","Any wine from Bordeaux","A wine aged for over ten years","A Premier Cru vineyard in Burgundy"],"For example, the 1855 classification of the Médoc and the Saint-Émilion classification."],
+[3,"Bordeaux labels","Which statement about red Bordeaux is correct?",["Most are blends, typically of Cabernet Sauvignon and Merlot","Most are made from Pinot Noir","All are made from a single variety","They are made from Syrah"],"Bordeaux is a blending region."],
+// ---- Syrah / Shiraz
+[3,"Syrah/Shiraz","Syrah/Shiraz typically has:",["Deep colour, medium to high tannin, and black fruit with black pepper","Pale colour, low tannin and strawberry","High acidity and lime flavours","Lychee and rose aromas"],"Pepper and blackberry are classic Syrah notes."],
+[3,"Syrah/Shiraz","Hermitage, Crozes-Hermitage and Côte Rôtie are in:",["The Northern Rhône","The Southern Rhône","Bordeaux","Burgundy"],"The Northern Rhône is Syrah's French heartland."],
+[3,"Syrah/Shiraz","Northern Rhône Syrah is typically:",["Medium to full-bodied with black fruit, black pepper and smoky notes","Light and fruity with no tannin","Sweet and fortified","White with high acidity"],"The moderate climate gives peppery, structured wines."],
+[3,"Syrah/Shiraz","Barossa Valley Shiraz is typically:",["Full-bodied, high in alcohol, with ripe black fruit and chocolate notes, often aged in American oak","Light and peppery with high acidity","Pale with red fruit","Sweet and sparkling"],"The warm Barossa gives very ripe, powerful Shiraz."],
+[3,"Syrah/Shiraz","Hunter Valley Shiraz is generally:",["Medium-bodied, earthy and lower in alcohol than Barossa Shiraz","More powerful and jammy than Barossa Shiraz","White","Fortified"],"Hunter Valley's humid, cloudy climate gives lighter, earthy wines."],
+[3,"Syrah/Shiraz","Shiraz from American oak barrels is likely to show:",["Vanilla and coconut flavours","Grass and green pepper","Petrol","Green apple"],"American oak is known for sweet vanilla and coconut flavours."],
+[3,"Syrah/Shiraz","Which French area produces PGI Syrah for inexpensive varietal wines?",["South of France","Champagne","Alsace","Chablis"],"PGI Pays d'Oc and similar."],
+[3,"Syrah/Shiraz","Compared with Barossa Shiraz, Northern Rhône Syrah is generally:",["More savoury and peppery, with fresher acidity","Riper, sweeter and more alcoholic","Paler with red fruit","Always oaked in American oak"],"Cooler conditions give a more restrained, peppery style."],
+// ---- Comparisons and labels
+[3,"Comparisons","Which red wine would you expect to be lightest in colour?",["Bourgogne Pinot Noir","Pauillac","Barossa Valley Shiraz","Napa Valley Cabernet Sauvignon"],"Pinot Noir is thin-skinned and pale."],
+[3,"Comparisons","Which white wine is most likely to have been aged in new oak?",["Meursault","Mosel Riesling Kabinett","Italian Pinot Grigio","Touraine Sauvignon Blanc"],"Top white Burgundy is often barrel fermented and aged."],
+[3,"Comparisons","Which grape variety is most associated with herbaceous green pepper or grass aromas?",["Sauvignon Blanc","Gewurztraminer","Chardonnay","Pinot Gris"],"Sauvignon Blanc is the classic herbaceous white."],
+[3,"Comparisons","Which wine would typically be the most full-bodied and alcoholic?",["Barossa Valley Shiraz","Mosel Riesling","Chablis","Beaujolais"],"Warm climate + Shiraz = high alcohol, full body."],
+[3,"Comparisons","Alsace Grand Cru is a labelling term found on wines from:",["Specific top vineyards in Alsace","All of Burgundy","Bordeaux's Left Bank","Champagne"],"Alsace has about 50 Grand Cru vineyards."],
+[3,"Comparisons","Which of these is a black grape variety?",["Merlot","Sauvignon Blanc","Riesling","Pinot Gris"],"The four principal black grapes are Merlot, Cabernet Sauvignon, Syrah/Shiraz and Pinot Noir."],
+
+// LO4 — regionally important grape varieties
+// ---- Gamay
+[4,"Gamay","Beaujolais is made from which grape?",["Gamay","Pinot Noir","Grenache","Syrah"],"Beaujolais = Gamay."],
+[4,"Gamay","Typical Beaujolais is:",["Light-bodied, high in acidity, low in tannin, with red fruit","Full-bodied with high tannin and black fruit","Sweet and fortified","White and oaked"],"Bright red-cherry and raspberry fruit; best young and lightly chilled."],
+[4,"Gamay","Which Beaujolais designation is the highest quality level?",["Beaujolais Cru (e.g. Fleurie)","Beaujolais Villages","Beaujolais","Beaujolais Nouveau"],"The ten Crus, such as Fleurie, sit above Beaujolais Villages and Beaujolais."],
+[4,"Gamay","Fleurie is:",["One of the Beaujolais Crus, made from Gamay","A white wine from the Loire","A Grand Cru in Chablis","A sweet wine from Alsace"],"Fleurie is a Beaujolais Cru."],
+[4,"Gamay","Beaujolais Villages differs from basic Beaujolais because it:",["Comes from a set of better villages and is usually more concentrated","Is always sweet","Is made from Pinot Noir","Is always oaked"],"Beaujolais Villages sits between basic Beaujolais and the Crus."],
+// ---- Grenache
+[4,"Grenache/Garnacha","Grenache typically produces wines with:",["High alcohol, low to medium tannin, and red fruit with spice","Low alcohol, high tannin and black fruit","Very high acidity and green fruit","Floral aromas and residual sugar"],"Grenache ripens to high sugar levels; strawberry, raspberry and spice notes are typical."],
+[4,"Grenache/Garnacha","Grenache thrives in:",["Warm, dry climates","Cool, wet climates","Very cold continental climates","Foggy coastal areas only"],"It needs heat to ripen and tolerates drought."],
+[4,"Grenache/Garnacha","Côtes du Rhône red is typically:",["A medium-bodied, fruity blend, often dominated by Grenache","A light Pinot Noir","A Syrah from the Northern Rhône","A white Viognier"],"Generic Côtes du Rhône comes mainly from the Southern Rhône."],
+[4,"Grenache/Garnacha","Châteauneuf-du-Pape is typically:",["A full-bodied, high-alcohol red blend dominated by Grenache","A light-bodied red from Gamay","A Syrah from the Northern Rhône","A sweet wine"],"Châteauneuf-du-Pape is the most famous Southern Rhône red."],
+[4,"Grenache/Garnacha","Côtes du Rhône Villages is:",["A step up in quality from generic Côtes du Rhône","A Northern Rhône Syrah","A sweet white wine","Lower quality than Côtes du Rhône"],"Villages wines come from better sites and have stricter rules."],
+[4,"Grenache/Garnacha","Minervois is in which part of France?",["The South of France (Languedoc)","The Loire","Burgundy","Alsace"],"Minervois is a Languedoc PDO producing red blends including Grenache."],
+[4,"Grenache/Garnacha","Which Spanish region, known for powerful and concentrated Garnacha-based reds, is a DOCa?",["Priorat","Rías Baixas","Jerez","Cava"],"Priorat is one of only two DOCa regions (with Rioja)."],
+[4,"Grenache/Garnacha","Navarra is a Spanish region listed in the specification for:",["Garnacha","Albariño","Palomino","Furmint"],"Navarra is known for Garnacha, including rosé."],
+[4,"Grenache/Garnacha","Barossa Valley and McLaren Vale are Australian regions known for:",["Old-vine Grenache, often blended with Shiraz","Cool-climate Pinot Noir","Icewine","Sparkling Glera"],"Both are warm South Australian regions with old Grenache vines."],
+[4,"Grenache/Garnacha","Because Grenache is thin-skinned and often pale, it is frequently:",["Blended with deeper-coloured varieties such as Syrah","Made into white wine","Used only for fortified wine","Aged for decades in bottle"],"Blends such as GSM add colour and structure."],
+// ---- Tempranillo
+[4,"Tempranillo","Tempranillo typically has:",["Medium tannin and acidity, red fruit flavours, and often oak influence","Very high acidity and green fruit","Pale colour and floral aromas","Tropical fruit and sweetness"],"Strawberry and red cherry; oak adds vanilla and spice."],
+[4,"Tempranillo","Which Spanish regions are listed for Tempranillo?",["Rioja, Ribera del Duero and Catalunya","Rías Baixas and Jerez","Priorat and Navarra only","Douro and Alentejo"],"These are the specification's Tempranillo GIs."],
+[4,"Tempranillo","Compared with Rioja, Ribera del Duero reds tend to be:",["Deeper in colour and fuller-bodied, with more concentrated black fruit","Lighter and paler","Sweet","White"],"The high, hot-summer plateau of Ribera del Duero gives powerful wines."],
+[4,"Tempranillo","A red Rioja labelled 'Joven' has:",["Little or no oak ageing and is released young and fruity","At least five years' ageing","Been aged mainly in bottle for decades","Been fortified"],"Joven = young."],
+[4,"Tempranillo","Which Spanish ageing term requires the longest minimum ageing?",["Gran Reserva","Reserva","Crianza","Joven"],"Gran Reserva > Reserva > Crianza > Joven."],
+[4,"Tempranillo","Put these Spanish labelling terms in order from least to most aged:",["Joven, Crianza, Reserva, Gran Reserva","Crianza, Joven, Reserva, Gran Reserva","Reserva, Crianza, Gran Reserva, Joven","Joven, Reserva, Crianza, Gran Reserva"],"Joven (young) → Crianza → Reserva → Gran Reserva.",true,0],
+[4,"Tempranillo","An aged Rioja Gran Reserva is likely to show:",["Dried fruit, leather, vanilla and earthy notes","Fresh, purple fruit with no oak","Lime and petrol","Lychee and rose"],"Long oak and bottle ageing develops savoury, tertiary notes."],
+[4,"Tempranillo","Traditional Rioja producers often use American oak, which gives:",["Vanilla and coconut flavours","Grassy flavours","Smoky bacon only","No flavour at all"],"American oak gives sweet, vanilla-coconut notes."],
+// ---- Nebbiolo
+[4,"Nebbiolo","Nebbiolo wines typically have:",["Pale colour but high tannin, high acidity and high alcohol","Deep colour and low tannin","Low acidity and soft fruit","Light body and residual sugar"],"Pale but powerful: a distinctive combination."],
+[4,"Nebbiolo","Typical aromas of Nebbiolo include:",["Red cherry, roses and dried herbs, developing leather and tar with age","Blackcurrant and mint","Lychee and ginger","Grass and gooseberry"],"Roses and tar are classic Nebbiolo descriptors."],
+[4,"Nebbiolo","Barolo and Barbaresco are made from:",["Nebbiolo","Sangiovese","Barbera","Corvina"],"Both are in Piemonte, north-west Italy."],
+[4,"Nebbiolo","Barolo and Barbaresco are located in which Italian region?",["Piemonte","Tuscany","Veneto","Puglia"],"Piemonte is in north-west Italy."],
+[4,"Nebbiolo","Why are Barolo and Barbaresco often aged before release and suitable for long cellaring?",["Their high tannin and acidity need time to soften","They are sweet","They are low in tannin","They are sparkling"],"Structure gives great ageing potential."],
+// ---- Barbera
+[4,"Barbera","Barbera typically produces wines with:",["Deep colour, high acidity, low to medium tannin and red cherry fruit","Pale colour and very high tannin","Low acidity and tropical fruit","White wine with floral aromas"],"Barbera is known for its high acidity and soft tannins."],
+[4,"Barbera","Barbera d'Asti comes from:",["Piemonte, Italy","Tuscany, Italy","Rioja, Spain","The Rhône, France"],"Asti is in Piemonte."],
+[4,"Barbera","Compared with Nebbiolo, Barbera has:",["Deeper colour and lower tannin","Paler colour and higher tannin","Lower acidity and more tannin","No acidity"],"Barbera is deep-coloured and softer in tannin."],
+// ---- Sangiovese
+[4,"Sangiovese","Sangiovese typically has:",["High acidity, medium to high tannin, and red cherry, plum and dried herb flavours","Low acidity and black pepper","Pale colour and lychee","Low tannin and tropical fruit"],"Sangiovese is the grape of Tuscany."],
+[4,"Sangiovese","Chianti and Chianti Classico are mainly made from:",["Sangiovese","Nebbiolo","Montepulciano","Corvina"],"Sangiovese is the main grape of Chianti."],
+[4,"Sangiovese","On an Italian label such as Chianti Classico, 'Classico' indicates:",["The wine comes from the original, historic heart of the region","The wine has been aged for longer","The wine is sweet","The wine is sparkling"],"Classico zones are usually the traditional central areas."],
+[4,"Sangiovese","On an Italian label, 'Riserva' indicates that the wine:",["Has been aged for longer before release","Comes from the historic centre","Is made from dried grapes","Is sweet"],"Riserva wines have a longer minimum ageing period."],
+[4,"Sangiovese","Brunello di Montalcino is:",["A full-bodied, long-lived Tuscan red made entirely from Sangiovese","A white wine from Piemonte","A sweet wine from the Veneto","A sparkling wine from Asti"],"Brunello is one of Italy's most prestigious reds."],
+[4,"Sangiovese","Chianti is in which Italian region?",["Tuscany","Piemonte","Veneto","Abruzzo"],"Chianti lies between Florence and Siena."],
+// ---- Corvina
+[4,"Corvina","Valpolicella is made mainly from which grape?",["Corvina","Sangiovese","Nebbiolo","Barbera"],"Corvina is the main grape of Valpolicella in the Veneto."],
+[4,"Corvina","Basic Valpolicella is typically:",["Light-bodied with red cherry fruit and high acidity","Full-bodied and high in alcohol","Sweet and fortified","White"],"Simple Valpolicella is light and fruity."],
+[4,"Corvina","Amarone della Valpolicella is made from:",["Grapes dried after harvest and fermented to dryness","Grapes affected by noble rot","Frozen grapes","Unripe grapes"],"Drying concentrates sugar and flavour, giving a full-bodied, high-alcohol dry red."],
+[4,"Corvina","Amarone is typically:",["Dry, full-bodied and high in alcohol","Sweet and low in alcohol","Light and fruity","Sparkling"],"Fermented dry from dried grapes."],
+[4,"Corvina","Recioto della Valpolicella is:",["A sweet red wine made from dried grapes","A dry rosé","A dry white","A sparkling red"],"Recioto is fermented from dried grapes but stopped before dryness."],
+[4,"Corvina","What is the main difference between Amarone and Recioto della Valpolicella?",["Amarone is dry; Recioto is sweet","Amarone is white; Recioto is red","Amarone is sparkling; Recioto is still","Amarone uses fresh grapes; Recioto uses frozen grapes"],"Both use dried grapes; only the fermentation differs."],
+[4,"Corvina","Valpolicella is produced in which Italian region?",["Veneto","Tuscany","Piemonte","Campania"],"The Veneto is in north-east Italy, near Verona."],
+// ---- Montepulciano
+[4,"Montepulciano","Montepulciano d'Abruzzo is made from:",["The Montepulciano grape","Sangiovese","Nebbiolo","Primitivo"],"Montepulciano is a grape here; Vino Nobile di Montepulciano is a Tuscan town wine made from Sangiovese."],
+[4,"Montepulciano","Montepulciano d'Abruzzo is typically:",["Deep-coloured, with medium to high tannin and ripe black fruit","Pale and very light","White with high acidity","Sweet"],"It is usually a good-value, fruity, deeply coloured red."],
+// ---- Zinfandel / Primitivo
+[4,"Zinfandel/Primitivo","Zinfandel and Primitivo are:",["The same grape variety","Two unrelated varieties","White grapes","Only used for sparkling wine"],"Zinfandel (California) = Primitivo (Puglia)."],
+[4,"Zinfandel/Primitivo","Red Zinfandel from California is typically:",["Full-bodied, high in alcohol, with ripe black fruit and sometimes dried fruit flavours","Light-bodied, low in alcohol, with red fruit","White and dry","Sparkling"],"Bunches ripen unevenly; some grapes become raisined, giving jammy notes."],
+[4,"Zinfandel/Primitivo","Primitivo is grown mainly in which Italian region?",["Puglia","Piemonte","Tuscany","Veneto"],"Puglia is in the warm south of Italy."],
+[4,"Zinfandel/Primitivo","A challenge with Zinfandel is that:",["Grapes in a bunch ripen unevenly","It never reaches high sugar levels","It only grows in cold climates","It cannot be made into rosé"],"Uneven ripening means some berries can be raisined while others are underripe."],
+// ---- Pinotage, Carmenère, Malbec
+[4,"Pinotage","Pinotage is a speciality of:",["South Africa","Chile","Argentina","New Zealand"],"Pinotage was created in South Africa."],
+[4,"Pinotage","Pinotage is a crossing of:",["Pinot Noir and Cinsault","Pinot Noir and Syrah","Pinot Grigio and Chardonnay","Merlot and Cabernet Sauvignon"],"It was bred in South Africa in the 1920s."],
+[4,"Pinotage","On a South African label, 'Cape Blend' usually means:",["A red blend that includes Pinotage","A white blend of Chenin Blanc","A fortified wine","A single-vineyard Sauvignon Blanc"],"Cape Blends contain a meaningful proportion of Pinotage."],
+[4,"Carmenère","Carmenère is particularly associated with:",["Chile","Argentina","Australia","Spain"],"Carmenère is a Chilean speciality, grown widely in the Central Valley."],
+[4,"Carmenère","Typical Carmenère flavours include:",["Black fruit with herbaceous green pepper notes","Lychee and rose","Lemon and green apple","Honey and marmalade"],"Carmenère often shows a green pepper character."],
+[4,"Malbec","Malbec is most associated with which region?",["Mendoza, Argentina","Rioja, Spain","Barossa, Australia","Napa, USA"],"Argentina's Mendoza is Malbec's modern home."],
+[4,"Malbec","Mendoza Malbec is typically:",["Deep in colour, with ripe black fruit and medium to high tannin","Pale, light and high in acidity","White and aromatic","Sweet and fortified"],"High-altitude sunshine gives deep colour and ripe fruit while cool nights keep freshness."],
+[4,"Malbec","Mendoza's high altitude benefits Malbec by:",["Giving cool nights that help keep acidity and freshness","Causing frost every summer","Making the grapes unripe","Encouraging noble rot"],"Altitude moderates the heat."],
+// ---- Chenin Blanc
+[4,"Chenin Blanc","Chenin Blanc typically has:",["High acidity and can be made in styles from dry to sweet, and sparkling","Low acidity and only dry styles","High tannin","Black fruit flavours"],"Like Riesling, its acidity allows many styles."],
+[4,"Chenin Blanc","Vouvray is made from:",["Chenin Blanc","Sauvignon Blanc","Chardonnay","Melon de Bourgogne"],"Vouvray is in the Loire."],
+[4,"Chenin Blanc","Vouvray can be:",["Dry, off-dry, sweet or sparkling","Only red","Only fortified","Only rosé"],"Vouvray covers a wide range of styles."],
+[4,"Chenin Blanc","Which country, apart from France, is listed in the specification for Chenin Blanc?",["South Africa","Australia","Chile","Argentina"],"South Africa is the world's largest grower of Chenin Blanc."],
+[4,"Chenin Blanc","Typical Chenin Blanc flavours include:",["Green apple and lemon, developing honey with age","Black pepper and blackberry","Lychee and ginger","Strawberry and cherry"],"Riper examples show tropical fruit; botrytis or age gives honey."],
+// ---- Semillon
+[4,"Semillon","Sauternes is made mainly from:",["Semillon, affected by noble rot","Riesling","Chenin Blanc","Furmint"],"Semillon (with some Sauvignon Blanc) is susceptible to noble rot."],
+[4,"Semillon","Sauternes is typically:",["Sweet, full-bodied, with honey, apricot and marmalade flavours","Dry and light","Red","Sparkling"],"Botrytis and oak give a rich, complex sweet wine."],
+[4,"Semillon","Hunter Valley Semillon is typically:",["Dry, light-bodied, low in alcohol and high in acidity, developing toast and honey with age","Sweet and botrytised","Full-bodied and heavily oaked","Red"],"Grapes are picked early to keep acidity. Unoaked, but with age it gains toasty notes."],
+[4,"Semillon","In Bordeaux, dry white wines are typically blends of:",["Semillon and Sauvignon Blanc","Chardonnay and Pinot Grigio","Riesling and Gewurztraminer","Viognier and Chenin Blanc"],"Semillon adds body; Sauvignon Blanc adds acidity and aroma."],
+[4,"Semillon","Barossa Valley Semillon, compared with Hunter Valley Semillon, is usually:",["Fuller-bodied and sometimes oaked","Lighter and lower in alcohol","Sweet and botrytised","Sparkling"],"The warmer Barossa gives riper styles."],
+// ---- Viognier
+[4,"Viognier","Condrieu is made from:",["Viognier","Marsanne","Chardonnay","Chenin Blanc"],"Condrieu is in the Northern Rhône."],
+[4,"Viognier","Viognier typically has:",["Full body, low to medium acidity, and peach, apricot and floral aromas","High acidity and green apple","Light body and neutral flavours","High tannin and black fruit"],"An aromatic, rich white."],
+[4,"Viognier","Condrieu is located in:",["The Northern Rhône","The Southern Rhône","The Loire","Bordeaux"],"Condrieu is just south of Côte Rôtie."],
+// ---- Gewurztraminer
+[4,"Gewurztraminer","Gewurztraminer typically has:",["Pronounced aromas of rose, lychee and sweet spice, with low acidity and full body","Neutral aromas and high acidity","High tannin and black fruit","Grassy aromas and light body"],"One of the most aromatic grapes."],
+[4,"Gewurztraminer","Gewurztraminer is listed in the specification for which region?",["Alsace","Rioja","Barossa Valley","Champagne"],"Alsace and Alsace Grand Cru."],
+[4,"Gewurztraminer","Alsace Gewurztraminer is often:",["Off-dry, with high alcohol and a deep colour","Sparkling","Red","Very light and high in acidity"],"Its low acidity means some residual sugar is common."],
+// ---- Italian and Spanish whites
+[4,"Verdicchio","Verdicchio dei Castelli di Jesi is a white wine from:",["Italy","Spain","France","Hungary"],"It is from the Marche region on Italy's Adriatic coast."],
+[4,"Verdicchio","Verdicchio typically has:",["Medium body, high acidity, citrus and a hint of bitter almond","Very full body and low acidity","Pronounced lychee and rose","Black fruit and tannin"],"A fresh white often with an almond note."],
+[4,"Cortese","Gavi is made from:",["Cortese","Garganega","Fiano","Verdicchio"],"Gavi is in Piemonte."],
+[4,"Cortese","Gavi is typically:",["A light-bodied, high-acid white with green apple and citrus flavours","A full-bodied red","A sweet dessert wine","A sparkling red"],"Crisp and refreshing."],
+[4,"Garganega","Soave is made mainly from:",["Garganega","Cortese","Fiano","Trebbiano only"],"Garganega is the main grape of Soave in the Veneto."],
+[4,"Garganega","Soave typically shows:",["Medium body with citrus, stone fruit and almond notes","High tannin and black fruit","Very sweet honey flavours","Petrol and lime"],"Better examples come from the Classico zone."],
+[4,"Garganega","Recioto di Soave is:",["A sweet white wine made from dried Garganega grapes","A dry red","A sparkling white","A fortified wine"],"Recioto = sweet wine from dried grapes, as in Valpolicella."],
+[4,"Fiano","Fiano di Avellino comes from which part of Italy?",["Campania, in the south","Piemonte, in the north-west","Veneto, in the north-east","Tuscany, in the centre"],"Campania is around Naples."],
+[4,"Fiano","Fiano typically produces:",["Medium to full-bodied whites with stone fruit and tropical fruit, and good ageing potential","Light, neutral whites for early drinking only","Sweet fortified wines","Red wines with high tannin"],"Fiano is textured and can develop with age."],
+[4,"Albariño","Albariño is grown in which Spanish region?",["Rías Baixas","Rioja","Priorat","Jerez"],"Rías Baixas in Galicia, on the Atlantic coast."],
+[4,"Albariño","Albariño from Rías Baixas is typically:",["Dry, high in acidity, with citrus and peach flavours","Sweet and botrytised","Red and tannic","Fortified"],"The cool, wet Atlantic climate keeps acidity fresh."],
+// ---- Furmint
+[4,"Furmint","Tokaji Aszú comes from:",["Hungary","Austria","Germany","Portugal"],"Tokaj is in north-east Hungary."],
+[4,"Furmint","The main grape of Tokaji is:",["Furmint","Riesling","Semillon","Chenin Blanc"],"Furmint has high acidity and is susceptible to noble rot."],
+[4,"Furmint","On a Tokaji label, 'Aszú' indicates:",["A sweet wine made using grapes affected by noble rot","A dry wine from young vines","A sparkling wine","A red wine"],"Aszú berries are botrytised."],
+// ---- Comparisons
+[4,"Comparisons","Which Italian red is made from dried grapes?",["Amarone","Chianti Classico","Barbera d'Asti","Montepulciano d'Abruzzo"],"Amarone uses the dried-grape method."],
+[4,"Comparisons","Which grape is the odd one out by country of main association?",["Malbec","Nebbiolo","Barbera","Sangiovese"],"Malbec = Argentina; the others are Italian."],
+[4,"Comparisons","Which wine would be the best example of a pale, high-tannin, high-acid red?",["Barolo","Mendoza Malbec","Barossa Shiraz","Montepulciano d'Abruzzo"],"Barolo (Nebbiolo) is famously pale but powerful."],
+[4,"Comparisons","Which of these is a white wine?",["Gavi","Barbaresco","Amarone","Brunello di Montalcino"],"Gavi is white (Cortese); the rest are red."],
+[4,"Comparisons","Which wine is NOT made from Grenache/Garnacha as its main grape?",["Ribera del Duero","Châteauneuf-du-Pape","Côtes du Rhône","Priorat"],"Ribera del Duero is Tempranillo-based."],
+
+// LO5 — sparkling and fortified wines
+[5,"Sparkling grapes","The main grape varieties used for Champagne are:",["Chardonnay, Pinot Noir and Meunier","Glera and Moscato","Palomino and Pedro Ximénez","Riesling and Chenin Blanc"],"These three account for almost all Champagne plantings."],
+[5,"Sparkling grapes","Prosecco is made mainly from which grape?",["Glera","Moscato","Chardonnay","Garganega"],"Glera is grown in north-east Italy."],
+[5,"Sparkling grapes","Asti is made from which grape?",["Moscato (Muscat)","Glera","Cortese","Pinot Noir"],"Moscato gives Asti its grapey, floral aromas."],
+[5,"Traditional method","In the traditional method, the second fermentation takes place:",["In the bottle in which the wine is sold","In a large sealed tank","In an open vat","In oak barrels before bottling"],"Also called bottle fermentation."],
+[5,"Traditional method","In the traditional method, what is added to the base wine to start the second fermentation?",["Sugar and yeast","Brandy","Carbon dioxide gas","Grape skins"],"This mixture is called the liqueur de tirage."],
+[5,"Traditional method","Ageing a traditional method wine on its lees after the second fermentation gives:",["Bread, biscuit and toast flavours","Grassy flavours","Fresh, grapey flavours","Smoky oak flavours"],"The breakdown of dead yeast (autolysis) creates these flavours."],
+[5,"Traditional method","Which stage of the traditional method removes the yeast sediment from the bottle?",["Disgorgement","Riddling","Dosage","Tirage"],"Riddling moves the sediment to the neck; disgorgement removes it."],
+[5,"Traditional method","The purpose of riddling is to:",["Move the yeast sediment into the neck of the bottle","Add sweetness","Start the second fermentation","Blend the base wines"],"Bottles are gradually turned and tilted neck-down."],
+[5,"Traditional method","The dosage added after disgorgement mainly determines the wine's:",["Sweetness level","Alcohol level","Colour","Grape variety"],"A mixture of wine and sugar is added to adjust sweetness, e.g. Brut or Demi-Sec."],
+[5,"Traditional method","Which is the correct order of stages for the traditional method?",["Base wine, second fermentation in bottle, lees ageing, riddling, disgorgement, dosage","Base wine, riddling, second fermentation, dosage, disgorgement, lees ageing","Second fermentation in tank, bottling, riddling, dosage","Base wine, dosage, disgorgement, riddling, second fermentation"],"This is the classic Champagne sequence.",true,0],
+[5,"Traditional method","Which sparkling wines are made by the traditional method?",["Champagne, Cava and Méthode Cap Classique","Prosecco and Asti","Champagne and Prosecco","Asti and Cava"],"Prosecco and Asti use tank methods."],
+[5,"Traditional method","'Méthode Cap Classique' indicates a traditional method sparkling wine from:",["South Africa","Australia","Spain","Italy"],"MCC is South Africa's term."],
+[5,"Traditional method","'Traditional Method' on a label tells you that the wine:",["Had its second fermentation in the bottle in which it is sold","Is from Champagne","Is sweet","Was made in a tank"],"Producers outside Champagne use this term to show the production method."],
+[5,"Tank method","In the tank method, the second fermentation takes place:",["In a large sealed tank, before the wine is bottled under pressure","In the bottle in which the wine is sold","In oak barrels","In the vineyard"],"This preserves fresh, fruity aromas and is cheaper."],
+[5,"Tank method","The tank method is used for sparkling wines that emphasise:",["Fresh, fruity and floral aromas","Toast and biscuit flavours from long lees ageing","Nutty, oxidised flavours","Oak flavours"],"Short time on lees keeps primary fruit to the fore."],
+[5,"Tank method","Prosecco is typically:",["Light to medium-bodied, with fresh green apple, pear and floral notes","Full-bodied with toasty, biscuit flavours","Sweet and fortified","Red and tannic"],"Prosecco is made by the tank method and drunk young."],
+[5,"Tank method","Asti is typically:",["Sweet, low in alcohol, with grapey and floral aromas","Dry and toasty","High in alcohol and fortified","Red"],"Fermentation in a pressurised tank is stopped early, at around 7% abv."],
+[5,"Tank method","Which sparkling wine is the sweetest in style?",["Asti","Champagne Brut","Cava Brut","Prosecco Brut"],"Asti is naturally sweet."],
+[5,"Sparkling GIs","Cava is produced mainly in:",["Spain","Italy","France","Portugal"],"Most Cava comes from Catalunya."],
+[5,"Sparkling GIs","Prosecco comes from:",["North-east Italy","Southern Spain","Champagne","Portugal"],"The Veneto and Friuli."],
+[5,"Sparkling GIs","Which of these countries is listed in the specification as producing sparkling wine outside Europe?",["New Zealand","Argentina","Chile","Hungary"],"South Africa, USA, Australia and New Zealand are listed."],
+[5,"Sparkling labels","'Brut' on a sparkling wine label indicates:",["A dry style","A sweet style","A vintage wine","A tank method wine"],"Brut is the most common dry style."],
+[5,"Sparkling labels","'Demi-Sec' on a sparkling wine label indicates:",["A medium-sweet style","A bone-dry style","A rosé","An aged vintage wine"],"Demi-Sec is noticeably sweet."],
+[5,"Sparkling labels","Most Champagne is non-vintage. This means it is:",["A blend of wines from several years, made to a consistent house style","Made from the oldest vines","Made from grapes of a single exceptional year","Made by the tank method"],"Blending across years gives consistency."],
+[5,"Sparkling labels","Vintage Champagne is:",["Made from grapes of a single year, usually only in good years","A blend of several years","Always sweet","Made by the tank method"],"Vintage wines usually get longer ageing too."],
+// Sherry
+[5,"Sherry","Sherry is a fortified wine from:",["Southern Spain (Jerez)","Northern Portugal","Sicily","South-west France"],"The Sherry area is around Jerez in Andalucía."],
+[5,"Sherry","Sherry is fortified:",["After fermentation, so the base wine is dry","During fermentation, to keep it sweet","Before fermentation","Never; it is not a fortified wine"],"All Sherry starts dry; sweet styles are sweetened afterwards."],
+[5,"Sherry","Flor is:",["A layer of yeast that grows on the surface of some Sherries","A type of oak barrel","A grape variety","A sweetening agent"],"Flor protects the wine from oxygen and gives bready, tangy flavours."],
+[5,"Sherry","Fino Sherry is:",["Pale, dry and light-bodied, aged under flor","Dark, sweet and raisined","Brown and nutty, aged without flor","Red and sweet"],"Ageing under flor keeps it pale and fresh, with bready notes."],
+[5,"Sherry","Oloroso Sherry is aged:",["In contact with oxygen, without flor","Under a layer of flor","In stainless steel only","In the bottle for many years"],"Oxygen gives a brown colour and nutty, toffee flavours."],
+[5,"Sherry","A naturally dry Oloroso is typically:",["Brown in colour, full-bodied, with nutty and toffee flavours","Pale, light and bready","Sweet and grapey","Pink"],"Oloroso is dry unless sweetened."],
+[5,"Sherry","Amontillado Sherry is:",["Aged first under flor and then in contact with oxygen","Aged only under flor","Made from dried grapes","Fortified during fermentation"],"It combines bready flor notes with nutty oxidative ones; amber in colour."],
+[5,"Sherry","Pale Cream Sherry is:",["A sweetened Fino-style Sherry","A sweetened Oloroso","Made from dried Pedro Ximénez grapes","A dry Amontillado"],"Pale in colour but sweet."],
+[5,"Sherry","Cream Sherry is usually:",["A sweetened Oloroso","A sweetened Fino","A dry Amontillado","A sparkling Sherry"],"Dark and sweet."],
+[5,"Sherry","Medium Sherry is usually:",["An off-dry to medium-sweet sweetened Amontillado","A bone-dry Fino","An unfortified wine","A tank method sparkling wine"],"Medium sits between dry and Cream styles."],
+[5,"Sherry","PX (Pedro Ximénez) Sherry is:",["Very sweet and dark, with raisin and fig flavours","Pale and bone dry","Light and bready","Pink and sparkling"],"Made from sun-dried Pedro Ximénez grapes."],
+[5,"Sherry","Which Sherry style should be served chilled and drunk soon after opening?",["Fino","Oloroso","Cream","PX"],"Fino is delicate and loses freshness quickly once opened."],
+[5,"Sherry","Which Sherry styles are dry?",["Fino, Amontillado and Oloroso","Pale Cream, Cream and PX","Medium and Cream","Only PX"],"These three are naturally dry; the others are sweetened or naturally sweet."],
+// Port
+[5,"Port","Port is fortified:",["During fermentation, to stop it and keep natural sweetness","After fermentation, when the wine is dry","Before the grapes are crushed","Only after bottling"],"Adding grape spirit kills the yeast and leaves residual sugar."],
+[5,"Port","Port comes from which valley?",["The Douro Valley, Portugal","The Rhône Valley, France","The Napa Valley, USA","The Barossa Valley, Australia"],"Port is from the Douro in northern Portugal."],
+[5,"Port","Ruby Port is typically:",["Deep in colour, sweet, with fresh red and black fruit","Pale gold and dry","Brown and nutty with long oak ageing","Sparkling"],"Ruby is aged briefly in large vessels to keep its fruit."],
+[5,"Port","Reserve Ruby Port is:",["A higher-quality Ruby with more concentrated fruit","An aged Tawny","A white Port","A dry Port"],"Reserve Ruby is a premium version of Ruby."],
+[5,"Port","Late Bottled Vintage (LBV) Port is:",["From a single year, aged in wood for several years before bottling, ready to drink","A blend of many years aged for 40 years","Bottled after two years and needing decades in bottle","A white Port"],"LBV gives a taste of vintage character at a more affordable price."],
+[5,"Port","Vintage Port is:",["Made in the best years, bottled young and needing long bottle ageing","Aged in small casks for decades","A blend of several vintages","Always light and pale"],"It throws a heavy sediment, so it needs decanting."],
+[5,"Port","Tawny Port is best described as:",["Sweet, with dried fruit, nut and caramel flavours from long ageing in wood","Deep purple with fresh black fruit","Bone dry and pale","Sparkling"],"Small wooden casks allow slow oxidation, giving a tawny colour."],
+[5,"Port","An indication of age such as '10 Years Old' or '20 Years Old' is found on:",["Tawny Port","Ruby Port","Vintage Champagne","Fino Sherry"],"These describe the average style/age of the blend."],
+[5,"Port","Which Port style is most likely to need decanting because of sediment?",["Vintage Port","Ruby Port","Tawny Port","Reserve Ruby Port"],"Vintage Port is bottled young and unfiltered, so it throws a crust."],
+[5,"Port","Compared with Ruby Port, Tawny Port is:",["Paler and browner, with nuttier, more developed flavours","Deeper purple and fruitier","Dry","Lower in alcohol"],"Long oxidative ageing changes colour and flavour."],
+[5,"Port","The alcohol level of Port is typically around:",["19–22% abv","8–10% abv","12–13% abv","40% abv"],"Fortification raises Port to roughly 20% abv."],
+[5,"Fortified","Which statement about Sherry and Port is correct?",["Sherry is fortified after fermentation; Port is fortified during fermentation","Both are fortified before fermentation","Both are made by the traditional method","Port is fortified after fermentation; Sherry during fermentation"],"This is the key difference in their production."],
+
+// LO6 — storage, service, faults, food and wine
+[6,"Storage","Ideal long-term wine storage conditions include:",["A cool, constant temperature, darkness and bottles stored on their side","A warm room with bright light","Standing bottles upright near a radiator","Changing temperatures to help ageing"],"Cool, constant, dark and, for corks, horizontal."],
+[6,"Storage","Bottles sealed with natural cork should be stored on their side to:",["Keep the cork moist so it does not dry out and let air in","Help the wine ferment","Make the sediment dissolve","Increase the alcohol"],"A dried-out cork lets oxygen in, causing oxidation."],
+[6,"Storage","Why should wine be kept away from strong light?",["Light can damage the wine and create unpleasant flavours","Light improves the colour","Light speeds up fermentation","Light adds sweetness"],"Especially important for wines in clear bottles."],
+[6,"Storage","Large fluctuations in storage temperature can:",["Cause the wine to expand and contract, pushing the cork and letting air in","Improve ageing","Make the wine sparkling","Add tannin"],"Stable temperatures are more important than the exact figure."],
+[6,"Preservation","A vacuum system preserves an opened bottle by:",["Removing air from the bottle","Adding argon gas","Freezing the wine","Adding sulfur"],"Less oxygen slows deterioration."],
+[6,"Preservation","A blanket system preserves an opened bottle by:",["Adding an inert gas that forms a protective layer over the wine","Pumping out the air","Chilling the bottle to 0°C","Adding sugar"],"The gas is heavier than air and keeps oxygen away from the wine's surface."],
+[6,"Service temperature","Sparkling wines should be served:",["Well chilled","Chilled","Lightly chilled","Room temperature"],"Well chilled keeps them fresh and controls the foam."],
+[6,"Service temperature","Sweet wines such as Sauternes should be served:",["Well chilled","Room temperature","Lightly chilled","Warm"],"Chilling balances the sweetness."],
+[6,"Service temperature","Light- and medium-bodied white wines and rosés should be served:",["Chilled","Well chilled","Room temperature","Lightly chilled"],"For example, Pinot Grigio or Provence-style rosé."],
+[6,"Service temperature","Full-bodied white wines such as oaked white Burgundy should be served:",["Lightly chilled","Well chilled","Ice cold","Room temperature"],"Over-chilling would mute their complex flavours."],
+[6,"Service temperature","Medium- and full-bodied red wines should be served at:",["Room temperature","Lightly chilled","Chilled","Well chilled"],"Too cold makes tannins feel harsher."],
+[6,"Service temperature","Light-bodied red wines such as Beaujolais can be served:",["At room temperature or lightly chilled","Well chilled only","Warm","Ice cold"],"Light chilling emphasises their fresh fruit."],
+[6,"Service temperature","Which wine should be served at the warmest temperature?",["Barolo","Champagne","Sancerre","Sauternes"],"Barolo is a full-bodied red: room temperature."],
+[6,"Opening wine","When opening sparkling wine, you should:",["Keep a hand on the cork and turn the bottle, holding it at an angle away from people","Remove the cage and let the cork fly out","Use a corkscrew","Shake the bottle to release pressure"],"Control the cork so it is released gently."],
+[6,"Opening wine","When opening a still wine, the first step is to:",["Remove the top of the capsule (foil) below the lip","Insert the corkscrew through the foil","Shake the bottle","Decant the wine"],"Then wipe the neck and remove the cork."],
+[6,"Decanting","A wine is decanted mainly to:",["Separate it from its sediment, or to let a young wine breathe","Make it colder","Add bubbles","Remove alcohol"],"Old reds and Vintage Port throw sediment."],
+[6,"Decanting","Before decanting a wine with sediment, the bottle should be:",["Stood upright for some time so the sediment settles","Shaken well","Chilled to freezing","Stored on its side until the moment of pouring"],"Then pour slowly, watching the neck against a light and stopping when sediment appears."],
+[6,"Decanting","Which wine is most likely to need decanting?",["Vintage Port","Prosecco","Pinot Grigio","Ruby Port"],"Vintage Port throws a heavy sediment."],
+[6,"Glassware","Wine glasses should be:",["Clean, free of detergent and odours, and shaped to concentrate aromas","Rinsed and left with soap residue","Stored rim-down on a smelly shelf","Warmed before use"],"Dirty glasses taint wine and flatten sparkling wine."],
+[6,"Glassware","Flute-shaped glasses are used for sparkling wines because they:",["Help retain the bubbles","Make the wine warmer","Increase alcohol","Remove sediment"],"A narrow glass slows the loss of bubbles."],
+[6,"Serving wine","Before serving a wine to a customer, you should check:",["Its appearance and nose for faults","The alcohol with a hydrometer","The pH","The vintage chart"],"A quick check catches faulty bottles."],
+[6,"Faults","A wine with cork taint typically smells:",["Musty, like damp cardboard, with muted fruit","Of vinegar","Of fresh flowers","Of cooked, jammy fruit"],"Cork taint is caused by a chemical (TCA), most often from contaminated corks."],
+[6,"Faults","A wine whose closure has failed, letting in oxygen, is likely to:",["Lose its fresh fruit, turn brownish and taste flat","Become more fruity","Become sparkling","Gain tannin"],"This is oxidation."],
+[6,"Faults","Heat damage can cause a wine to:",["Taste of cooked or stewed fruit","Smell of damp cardboard","Become more acidic and fresh","Develop bubbles"],"Signs include a pushed-up cork or leaking."],
+[6,"Faults","Which sign might suggest a bottle has suffered heat damage?",["The cork has been pushed up or wine has leaked","The label is upside down","There are tartrate crystals","The wine is very pale"],"Heat expands the wine, forcing the cork out."],
+[6,"Food and wine","Sweetness in food makes wine taste:",["Drier, more acidic and more bitter, and less fruity","Sweeter and fruitier","Less acidic","Lower in alcohol"],"Pair sweet food with wine at least as sweet."],
+[6,"Food and wine","Umami in food makes wine taste:",["More bitter, more acidic and more alcoholic, and less fruity","Sweeter and fruitier","Less acidic and less bitter","No different"],"Umami (e.g. mushrooms, cured meats) behaves like sweetness."],
+[6,"Food and wine","Acidity in food makes wine taste:",["Less acidic, and fuller, sweeter and fruitier","More acidic and bitter","Less fruity","More alcoholic"],"Wines with high acidity work best with acidic dishes."],
+[6,"Food and wine","Salt in food makes wine taste:",["Less bitter and less acidic, with more body","More bitter and more acidic","Thinner and less fruity","More alcoholic"],"Salt is food-friendly; it softens tannic and acidic wines."],
+[6,"Food and wine","Chilli heat in food:",["Increases the burning effect of alcohol and the bitterness of tannins","Makes wine sweeter","Reduces bitterness","Has no effect on wine"],"Choose low-alcohol, off-dry, fruity wines with spicy food."],
+[6,"Food and wine","Fatty or oily food pairs well with high-acid wines because:",["The acidity gives a refreshing, cleansing sensation","Fat makes the wine sweeter","Fat increases the alcohol","Acid adds tannin to the food"],"Acidity cuts through richness."],
+[6,"Food and wine","When pairing by flavour intensity, you should:",["Match the intensity of the food and wine so neither overpowers the other","Always serve the most intense wine available","Always choose a light wine","Ignore flavour intensity"],"Delicate food with delicate wine; intense food with intense wine."],
+[6,"Food and wine","Which type of wine is generally the most 'food-friendly' (low risk)?",["Simple, fruity, unoaked wine with a little sweetness","Very tannic, oaky red","Highly bitter, heavily oaked white","High-alcohol fortified wine"],"High-risk wines are bitter, oaky, tannic or complex."],
+[6,"Food and wine","Which wine would be best with a slightly sweet, spicy Thai curry?",["Off-dry Riesling","Barolo","Barossa Shiraz","Oaked Napa Cabernet Sauvignon"],"Sweetness and lower alcohol counter chilli heat and food sweetness."],
+[6,"Food and wine","Which wine would best suit a dish with a lemony, acidic sauce?",["A high-acid white such as Sancerre","A low-acid Viognier","A sweet Tawny Port","A tannic Pauillac"],"Acidic food makes low-acid wines taste flat; high-acid wines stay balanced."],
+[6,"Food and wine","Which food component reduces the perception of bitterness and acidity in wine?",["Salt","Sweetness","Umami","Chilli heat"],"Salt is one of the most wine-friendly components."],
+[6,"Food and wine","A high-tannin red with very sweet dessert will taste:",["More bitter and astringent, and less fruity","Sweeter and smoother","More fruity","Lower in alcohol"],"Sweetness in food emphasises bitterness and acidity."],
+
+];
+const BANK=RAW.map(([lo,topic,q,opts,why,keep,ans])=>({lo,topic,q,opts,why,keep:!!keep,ans:keep?ans:0}));
+const FULL={1:5,2:4,3:19,4:12,5:6,6:4};
+const PRACTICE={1:15,2:15,3:20,4:20,5:15,6:15};
+const $=id=>document.getElementById(id);
+let paper=[],answers=[],cur=0,timer=null,remaining=0,timedOut=false,mode="full";
+
+$("banksize").textContent=BANK.length;
+$("wtable").innerHTML=Object.keys(FULL).map(lo=>`<tr><td>${LO_NAMES[lo]}</td><td>${FULL[lo]}</td></tr>`).join("");
+
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function buildPaper(){
+  const plan=mode==="full"?FULL:{[mode]:PRACTICE[mode]};
+  let out=[];
+  for(const lo of Object.keys(plan)) out=out.concat(shuffle(BANK.filter(b=>String(b.lo)===String(lo))).slice(0,plan[lo]));
+  return shuffle(out).map(b=>{
+    const idx=b.keep?b.opts.map((_,i)=>i):shuffle(b.opts.map((_,i)=>i));
+    return {...b,opts:idx.map(i=>b.opts[i]),ans:idx.indexOf(b.ans)};
+  });
+}
+function fmt(s){const m=Math.floor(s/60),r=s%60;return String(m).padStart(2,"0")+":"+String(r).padStart(2,"0");}
+
+function start(){
+  mode=$("mode").value;
+  paper=buildPaper();answers=new Array(paper.length).fill(null);cur=0;timedOut=false;
+  remaining=Math.round(paper.length*72); // 60 min for 50 questions
+  $("start").hidden=true;$("results").hidden=true;$("quiz").hidden=false;$("meta").hidden=false;
+  $("mn").textContent=paper.length;
+  clearInterval(timer);
+  const timed=$("timed").checked;$("mtimer").hidden=!timed;
+  if(timed){$("mt").textContent=fmt(remaining);
+    timer=setInterval(()=>{remaining--;$("mt").textContent=fmt(Math.max(remaining,0));if(remaining<=0){timedOut=true;finish();}},1000);}
+  render();window.scrollTo({top:0});
+}
+function render(){
+  const p=paper[cur];
+  $("mq").textContent=cur+1;
+  $("bar").style.width=(cur/paper.length*100)+"%";
+  $("qlo").textContent=LO_NAMES[p.lo]+" · "+p.topic;
+  $("qtext").textContent=p.q;
+  const ul=$("opts");ul.innerHTML="";
+  p.opts.forEach((o,i)=>{
+    const li=document.createElement("li");const b=document.createElement("button");
+    b.className="opt";b.type="button";b.setAttribute("role","radio");
+    b.setAttribute("aria-checked",answers[cur]===i?"true":"false");
+    b.innerHTML='<span class="k">'+"abcd"[i]+'</span><span></span>';b.lastChild.textContent=o;
+    b.onclick=()=>{answers[cur]=i;render();};
+    li.appendChild(b);ul.appendChild(li);
+  });
+  $("prev").disabled=cur===0;
+  $("next").disabled=answers[cur]===null;
+  $("next").textContent=cur===paper.length-1?"Finish and mark":"Next";
+}
+function next(){if(answers[cur]===null)return;if(cur<paper.length-1){cur++;render();}else finish();}
+function prev(){if(cur>0){cur--;render();}}
+function grade(pct){
+  if(pct>=85)return["Pass with distinction","dist"];
+  if(pct>=70)return["Pass with merit","pass"];
+  if(pct>=55)return["Pass","pass"];
+  return["Fail","fail"];
+}
+function finish(){
+  clearInterval(timer);
+  $("quiz").hidden=true;$("meta").hidden=true;$("results").hidden=false;
+  const n=paper.length,right=paper.filter((p,i)=>answers[i]===p.ans).length,pct=Math.round(right/n*100);
+  $("score").innerHTML=right+"<small>/"+n+"</small>";
+  const [g,cls]=grade(right/n*100);const v=$("verdict");v.textContent=g;v.className="pill "+cls;
+  $("pct").textContent=pct+"% · pass 55%, merit 70%, distinction 85%"+(mode==="full"?"":" · practice paper");
+  $("timeup").hidden=!timedOut;
+  const lb=$("lobars");lb.innerHTML="";
+  for(const lo of [1,2,3,4,5,6]){
+    const qs=paper.map((p,i)=>[p,i]).filter(([p])=>p.lo===lo);if(!qs.length)continue;
+    const ok=qs.filter(([p,i])=>answers[i]===p.ans).length;
+    const d=document.createElement("div");d.className="lo";
+    d.innerHTML='<span></span><span class="v">'+ok+"/"+qs.length+'</span><div class="bar"><span style="width:'+(ok/qs.length*100)+'%"></span></div>';
+    d.firstChild.textContent=LO_NAMES[lo];lb.appendChild(d);
+  }
+  const wrong=paper.map((p,i)=>[p,i]).filter(([p,i])=>answers[i]!==p.ans);
+  $("revh").textContent=wrong.length?"Questions to review ("+wrong.length+")":"Questions to review";
+  const rv=$("review");rv.innerHTML="";
+  if(!wrong.length){const li=document.createElement("li");li.className="allright";li.textContent="Full marks. Nothing to review.";rv.appendChild(li);}
+  wrong.forEach(([p,i])=>{
+    const li=document.createElement("li");li.className="rv";
+    const mk=(cls,html)=>{const e=document.createElement("div");e.className=cls;e.innerHTML=html;return e;};
+    const eb=mk("eyebrow","");eb.textContent="Q"+(i+1)+" · "+LO_NAMES[p.lo]+" · "+p.topic;
+    const q=mk("q","");q.textContent=p.q;
+    const you=mk("ans you","<b>Your answer:</b> ");you.append(answers[i]===null?"(not answered)":p.opts[answers[i]]);
+    const ok=mk("ans right","<b>Correct answer:</b> ");ok.append(p.opts[p.ans]);
+    const why=mk("why","");why.textContent=p.why;
+    li.append(eb,q,you,ok,why);rv.appendChild(li);
+  });
+  if(mode==="full"){try{const best=Math.max(right,Number(localStorage.getItem("wsetL2best")||0));localStorage.setItem("wsetL2best",best);}catch(e){}}
+  showBest();window.scrollTo({top:0});
+}
+function showBest(){try{const b=localStorage.getItem("wsetL2best");$("best").textContent=b?"Your best full-paper score so far: "+b+"/50":"";}catch(e){}}
+$("go").onclick=start;
+$("again").onclick=()=>{$("results").hidden=true;$("start").hidden=false;showBest();window.scrollTo({top:0});};
+$("next").onclick=next;$("prev").onclick=prev;
+document.addEventListener("keydown",e=>{
+  if($("quiz").hidden)return;
+  const k=parseInt(e.key,10);
+  if(k>=1&&k<=paper[cur].opts.length){answers[cur]=k-1;render();}
+  else if(e.key==="Enter"&&!e.target.closest(".opt")){next();}
+});
+showBest();
+</script>
+
+</body>
+</html>
